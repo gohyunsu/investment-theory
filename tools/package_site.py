@@ -24,6 +24,9 @@ allowed = [
     "guide.pdf",
     "guide.tex",
     ".nojekyll",
+    "lecture/01.html",
+    "lecture/02.html",
+    "lecture/03.html",
 ]
 allowed += [entry["path"] for entry in manifest]
 if len(allowed) != len(set(allowed)):

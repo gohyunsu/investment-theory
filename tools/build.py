@@ -152,42 +152,6 @@ def build_tex(slides: list[dict]) -> None:
     (ROOT / "guide.tex").write_text("\n".join(parts), encoding="utf-8")
 
 
-def build_site(slides: list[dict]) -> None:
-    data = [{
-        k: (v.replace(r"\boldsymbol", r"\mathbf") if k == "html" else v)
-        for k, v in slide.items() if k not in ("raw", "supplement")
-    } | ({
-        "supplement": {
-            "title": slide["supplement"]["title"],
-            "html": slide["supplement"]["html"].replace(r"\boldsymbol", r"\mathbf"),
-        }
-    } if slide.get("supplement") else {}) for slide in slides]
-    (ROOT / "data.json").write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
-    references = [
-        ("미국 SEC · 투자와 자산배분", "https://www.investor.gov/introduction-investing/getting-started/asset-allocation"),
-        ("미국 SEC · 투자 위험의 종류", "https://www.investor.gov/introduction-investing/investing-basics/what-risk"),
-        ("미국 재무부 · 단기국채와 가격", "https://www.treasurydirect.gov/marketable-securities/understanding-pricing/"),
-        ("FINRA · 증거금 거래의 위험", "https://www.finra.org/investors/investing/investment-products/stocks"),
-        ("한국거래소 · 코스피200 선물", "https://global.krx.co.kr/contents/GLB/02/0201/0201040201/GLB0201040201.jsp"),
-        ("Markowitz (1952) · Portfolio Selection", "https://doi.org/10.1111/j.1540-6261.1952.tb01525.x"),
-        ("미국 연방준비제도 · 위험 프리미엄", "https://www.federalreserve.gov/publications/may-2021-asset-valuations.htm"),
-    ]
-    refs = "".join(f'<li><a href="{html.escape(url)}" target="_blank" rel="noopener">{html.escape(name)}</a></li>' for name, url in references)
-    (ROOT / "index.html").write_text(f"""<!doctype html>
-<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>주식·채권·파생금융상품의 이론 | 학습 가이드</title>
-<meta name="description" content="수익률, 위험, 두 자산 포트폴리오를 66개 슬라이드 흐름에 따라 설명하는 금융투자 이론 가이드.">
-<link rel="stylesheet" href="style.css"><link rel="icon" href="favicon.svg" type="image/svg+xml">
-<script>window.MathJax={{tex:{{inlineMath:[['$','$']],displayMath:[['$$','$$']]}},options:{{skipHtmlTags:['script','noscript','style','textarea','pre']}}}};</script>
-<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
-<script defer src="app.js"></script></head>
-<body><a class="skip" href="#main">본문으로 이동</a>
-<header class="top"><a class="brand" href="#01-intro/1"><span class="mark">F</span><span>금융투자 이론<br><small>STUDY ATLAS</small></span></a><span class="top-right">66 slides · 3 chapters</span></header>
-<div class="layout"><aside class="sidebar"><div class="sidebar-intro"><span class="eyebrow">COURSE GUIDE</span><h1>투자에서<br>포트폴리오까지</h1><p>개념의 출발점부터 수식의 유도와 경제학적 직관까지.</p></div><label class="search-label" for="search">슬라이드 찾기</label><input id="search" type="search" placeholder="예: VaR, 공분산, 샤프비율" autocomplete="off"><nav id="nav" aria-label="슬라이드 목록"></nav><div class="sidebar-footer"><a href="guide.pdf">PDF 가이드</a><a href="guide.tex">TeX 원고</a><button id="refs-open" type="button">더 읽을 자료</button></div></aside>
-<main id="main" tabindex="-1"><div class="progress"><div id="progress-fill"></div></div><div id="reader"></div><div class="bottom-nav"><button id="previous" type="button">← 이전</button><span id="position"></span><button id="next" type="button">다음 →</button></div></main></div>
-<dialog id="references"><div class="dialog-head"><div><span class="eyebrow">REFERENCES</span><h2>더 읽을 자료</h2></div><button id="refs-close" aria-label="닫기">×</button></div><p>개념과 제도의 배경을 더 깊이 살펴볼 수 있는 공식 자료와 원전이다.</p><ul>{refs}</ul></dialog>
-</body></html>""", encoding="utf-8")
-
 
 def main() -> None:
     slides = []
@@ -204,8 +168,9 @@ def main() -> None:
     if len(slides) != 66 or len(assets) != 66 or any(s["image"] not in assets for s in slides):
         raise ValueError("The guide and slide image manifest must align on all 66 pages")
     build_tex(slides)
-    build_site(slides)
-    print(f"Built {len(slides)} slide sections, guide.tex, data.json and index.html")
+    from site_builder import build_site
+    build_site(ROOT, slides)
+    print(f"Built {len(slides)} slide sections, guide.tex, data.json, home and chapter pages")
 
 
 if __name__ == "__main__":

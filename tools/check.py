@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import math
+import re
 from pathlib import Path
 
 from PIL import Image
@@ -20,6 +21,17 @@ for slide in slides:
     with Image.open(image) as picture:
         assert picture.width >= 1500 and picture.height >= 900, slide["id"]
     assert slide["title"] and slide["html"] and "\ufffd" not in slide["html"]
+
+for chapter_number, chapter_slug in enumerate(("01-intro", "02-risk-return", "03-two-assets"), 1):
+    page = (root / "lecture" / f"{chapter_number:02}.html").read_text(encoding="utf-8")
+    chapter_slides = [slide for slide in slides if slide["chapter"] == chapter_slug]
+    assert len(chapter_slides) == 22
+    assert len(re.findall(r'<section class="slide" id="s\d{2}"', page)) == 22
+    for slide in chapter_slides:
+        assert f'id="s{slide["page"]:02}"' in page
+        assert f'../{slide["image"]}' in page
+    assert page.count('width="1600" height="1200"') == 22
+assert (root / "index.html").read_text(encoding="utf-8").count('<a class="overview-card ') == 3
 
 assert not list(root.rglob("*_original.txt"))
 pdfs = [path for path in root.rglob("*.pdf") if "_build" not in path.parts and "_site" not in path.parts]
