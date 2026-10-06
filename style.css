@@ -147,6 +147,7 @@ details p{padding:13px 2px 15px;font-size:14px;color:#3e5361;margin:0!important}
 .explanation p:has(> mjx-container[display="true"]){overflow-x:auto}
 .explanation p{max-width:100%;overflow-x:auto;overflow-y:hidden}
 .home-hero .hero-formula mjx-container[display="true"]{margin:0!important}
+@media(max-width:760px){.site-header>.pdf-link{display:none}.site-header .brand{white-space:normal;min-width:0;font-size:13px;line-height:1.25}.site-header .brand-mark,.site-header .search-trigger{flex:none}}
 .lab{margin-top:28px;padding:24px;background:#edf5f3;border:1px solid #d5e5df;border-radius:10px}
 .lab h3{color:#173655;margin:0 0 6px;font-size:18px}.lab p{font-size:13px;color:#53696b;line-height:1.7;margin:0 0 17px}
 .lab-controls{display:flex;gap:18px;flex-wrap:wrap;align-items:center;margin-bottom:15px}.lab-controls label{font-size:12px;font-weight:700;color:#234e55}.lab-controls input{vertical-align:middle;width:160px;accent-color:#146d70}
