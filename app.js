@@ -81,6 +81,14 @@ addEventListener('scroll', updateProgress, {passive:true});
 addEventListener('resize', updateProgress);
 updateProgress();
 
+// Math typesetting changes section heights; settle direct slide links afterwards.
+if (/^#s\d{2}$/.test(location.hash)) {
+  const target = document.getElementById(location.hash.slice(1));
+  const alignTarget = () => requestAnimationFrame(() => target?.scrollIntoView({block:'start', behavior:'instant'}));
+  addEventListener('load', alignTarget, {once:true});
+  if (window.MathJax?.startup?.promise) MathJax.startup.promise.then(alignTarget).catch(() => {});
+}
+
 function portfolioLab() {
   return `<section class="lab" aria-label="분산투자 실험실"><h3>상관관계를 바꾸면 프런티어가 어떻게 움직일까?</h3><p>두 자산의 기대수익은 10%와 14%, 표준편차는 15%와 20%로 고정했다. 상관계수와 첫 자산의 비중을 움직여 위험이 어떻게 바뀌는지 확인해 보자.</p><div class="lab-controls"><label>상관계수 <strong id="rho-value"></strong> <input id="rho" type="range" min="-100" max="100" value="20" aria-label="상관계수"></label><label>자산 1 비중 <strong id="weight-value"></strong> <input id="weight" type="range" min="0" max="100" value="60" aria-label="자산 1 비중"></label></div><svg id="portfolio-plot" viewBox="0 0 620 340" role="img" aria-label="선택한 상관계수에서 두 자산의 기대수익과 표준편차 관계"></svg><div class="lab-metrics"><span id="lab-mean"></span><span id="lab-risk"></span><span id="lab-gmv"></span></div></section>`;
 }

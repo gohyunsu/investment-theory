@@ -22,6 +22,7 @@
 | 경로 | 역할 |
 | --- | --- |
 | `content/01-intro.md` 등 | 3개 장, 66개 장면의 본문 |
+| `content/deep-dives.md` | 66개 슬라이드별 상세 해설 |
 | `content/supplements.md` | 펼쳐 읽는 심화 설명 |
 | `assets/slides/` | 장면별 웹 이미지 |
 | `tools/build.py` | 단일 원고에서 사이트 데이터와 LaTeX 문서 생성 |

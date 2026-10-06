@@ -20,6 +20,7 @@ CHAPTERS = [
 ]
 SLIDE_RE = re.compile(r"^## (\d+)\. (.+)$", re.MULTILINE)
 SUPPLEMENT_RE = re.compile(r"^## ([\w-]+/\d+) \| (.+)$", re.MULTILINE)
+DEEP_DIVE_RE = re.compile(r"^## ([\w-]+/\d+) \| (.+)$", re.MULTILINE)
 MATH_RE = re.compile(r"(\$\$[\s\S]*?\$\$|\$[^$\n]+\$)")
 
 
@@ -67,6 +68,21 @@ def load_supplements() -> dict[str, dict]:
     for i, match in enumerate(matches):
         body = source[match.end():matches[i + 1].start() if i + 1 < len(matches) else len(source)].strip()
         result[match.group(1)] = {"title": match.group(2), "raw": body, "html": render_markdown(body)}
+    return result
+
+
+def load_deep_dives() -> dict[str, str]:
+    source = (ROOT / "content/deep-dives.md").read_text(encoding="utf-8")
+    matches = list(DEEP_DIVE_RE.finditer(source))
+    result = {}
+    for i, match in enumerate(matches):
+        key = match.group(1)
+        if key in result:
+            raise ValueError(f"Duplicate deep dive: {key}")
+        body = source[match.end():matches[i + 1].start() if i + 1 < len(matches) else len(source)].strip()
+        if not body:
+            raise ValueError(f"Empty deep dive: {key}")
+        result[key] = body
     return result
 
 
@@ -157,6 +173,13 @@ def main() -> None:
     slides = []
     for slug, name, _ in CHAPTERS:
         slides.extend(slides_from_markdown(ROOT / "content" / (slug + ".md"), slug, name))
+    deep_dives = load_deep_dives()
+    slide_ids = {slide["id"] for slide in slides}
+    if set(deep_dives) != slide_ids:
+        raise ValueError(f"Deep dives must cover every slide: missing={slide_ids-set(deep_dives)}, extra={set(deep_dives)-slide_ids}")
+    for slide in slides:
+        slide["raw"] += "\n\n" + deep_dives[slide["id"]]
+        slide["html"] = render_markdown(slide["raw"])
     supplements = load_supplements()
     if set(supplements) - {slide["id"] for slide in slides}:
         raise ValueError("A supplement points to a missing slide")

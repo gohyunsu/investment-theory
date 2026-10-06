@@ -1,6 +1,6 @@
 # 편집 구조
 
-이 가이드는 한 개의 본문을 웹과 LaTeX로 각각 옮깁니다. 세 개의 장 파일에는 `## 번호. 제목` 형식의 항목이 정확히 22개씩 있으며, 각 항목은 `chapter/page` ID로 이미지 하나와 연결됩니다. `content/supplements.md`의 심화 항목은 같은 ID에 연결됩니다.
+이 가이드는 한 개의 본문을 웹과 LaTeX로 각각 옮깁니다. 세 개의 장 파일에는 `## 번호. 제목` 형식의 항목이 정확히 22개씩 있으며, 각 항목은 `chapter/page` ID로 이미지 하나와 연결됩니다. `content/deep-dives.md`의 상세 해설은 66개 ID를 빠짐없이 보강하고, `content/supplements.md`의 심화 항목은 같은 ID에 연결됩니다.
 
 `tools/build.py`는 모든 ID, 순서, 이미지 대응을 검사한 후 `data.json`과 `guide.tex`를 만듭니다. `tools/site_builder.py`는 같은 데이터를 이용해 목차형 `index.html`과 장별 `lecture/01.html`~`03.html`을 생성합니다. 해설을 수정한 뒤에는 생성 파일을 수동으로 고치지 않고 빌더를 다시 실행합니다. 웹 화면에서 인라인·디스플레이 수식은 MathJax가 표시하며, LaTeX 문서는 같은 수식 표현을 사용합니다.
 

@@ -26,9 +26,11 @@ CHAPTERS = [
 
 REFERENCES = [
     ("미국 SEC · 자산배분과 분산투자", "https://www.investor.gov/introduction-investing/getting-started/asset-allocation"),
+    ("미국 SEC · 분산투자의 한계", "https://www.investor.gov/introduction-investing/investing-basics/save-and-invest/diversify-your-investments"),
     ("미국 SEC · 투자 위험", "https://www.investor.gov/introduction-investing/investing-basics/what-risk"),
     ("미국 재무부 · 국채 가격과 금리", "https://www.treasurydirect.gov/marketable-securities/understanding-pricing/"),
     ("FINRA · 주식 투자", "https://www.finra.org/investors/investing/investment-products/stocks"),
+    ("FINRA · 채권과 듀레이션", "https://www.finra.org/investors/investing/investment-products/bonds"),
     ("한국거래소 · 코스피200 선물", "https://global.krx.co.kr/contents/GLB/02/0201/0201040201/GLB0201040201.jsp"),
     ("Markowitz (1952) · Portfolio Selection", "https://doi.org/10.1111/j.1540-6261.1952.tb01525.x"),
     ("미국 연방준비제도 · 위험 프리미엄", "https://www.federalreserve.gov/publications/may-2021-asset-valuations.htm"),
