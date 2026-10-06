@@ -71,7 +71,7 @@ def home(slides: list[dict]) -> str:
     refs = ''.join(f'<li><a href="{e(url)}" target="_blank" rel="noopener noreferrer">{e(label)}</a></li>' for label, url in REFERENCES)
     content = f'''<main id="main" class="home-main"><section class="home-hero"><div class="eyebrow">2026 · 2학기 · 학습 가이드</div><h1>투자의 언어에서<br><em>포트폴리오의 선택</em>까지</h1><p>금융자산의 현금흐름을 이해하고, 수익률과 위험을 측정한 뒤, 두 자산의 분산효과와 효율적인 투자 조합을 직접 유도한다. 각 슬라이드와 해설이 같은 자리에서 이어진다.</p><div class="hero-actions"><a class="primary-button" href="lecture/01.html">처음부터 읽기 <span>→</span></a><a class="pdf-link" href="guide.pdf" download>PDF 내려받기 ↓</a><span>3개 장 · {len(slides)}개 슬라이드</span></div><div class="hero-formula" aria-label="포트폴리오 분산">$$\\sigma_p^2=\\mathbf{{w}}^\\top\\Sigma\\mathbf{{w}}$$</div></section>
 <section class="learning-path"><div class="section-kicker">학습 경로</div><h2>한 흐름으로 연결되는 세 장</h2><div class="path-line"><span>자산의 현금흐름</span><b>→</b><span>수익률과 위험</span><b>→</b><span>분산투자</span><b>→</b><span>효율적 선택</span></div><div class="overview-grid">{''.join(cards)}</div></section>
-<section class="home-note"><h2>읽는 방법</h2><p>왼쪽에서 슬라이드 화면을 확인하고 오른쪽 해설에서 개념의 배경, 계산 과정, 경제학적 의미를 따라가세요. 이미지를 눌러 확대할 수 있습니다. 각 슬라이드의 질문과 사례, 필요한 보충 설명은 펼쳐 읽을 수 있습니다.</p><details class="further-reading"><summary>더 읽을 자료</summary><ul>{refs}</ul></details></section>{footer('')}</main>'''
+<section class="home-note"><h2>읽는 방법</h2><p>왼쪽에서 슬라이드 화면을 확인하고 오른쪽 해설에서 개념의 배경, 계산 과정, 경제학적 의미를 따라가세요. 이미지를 눌러 확대할 수 있습니다. 추가 설명은 필요한 곳에서 펼쳐 읽을 수 있습니다.</p><details class="further-reading"><summary>더 읽을 자료</summary><ul>{refs}</ul></details></section>{footer('')}</main>'''
     return layout('', '전체 목차', '투자와 금융자산, 수익률과 위험, 두 자산 포트폴리오를 66개 슬라이드에 따라 배우는 학습 가이드.', content)
 
 
@@ -89,7 +89,7 @@ def lecture(chapter: dict, slides: list[dict], chapter_index: int) -> str:
         slide_number = f'{s["page"]:02}'
         src = '../' + s['image']
         case = s['case']
-        case_html = f'<details class="case-note"><summary>질문과 사례 · {e(case["title"])}</summary>{case["html"]}</details>'
+        case_html = f'<details class="case-note"><summary>{e(case["title"])}</summary>{case["html"]}</details>'
         supplement = s.get('supplement')
         supplement_html = f'<details><summary>{e(supplement["title"])}</summary>{supplement["html"]}</details>' if supplement else ''
         lab = '<div id="portfolio-lab"></div>' if s['id'] == '03-two-assets/18' else ''

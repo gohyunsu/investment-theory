@@ -178,7 +178,7 @@ def build_tex(slides: list[dict]) -> None:
         parts.append("\\subsection{슬라이드 " + str(slide["page"]) + ": " + tex_escape(slide["title"]) + "}\n")
         parts.append(tex_body(slide["raw"]) + "\n")
         case = slide["case"]
-        parts.append("\\paragraph{질문과 사례: " + tex_inline(case["title"]) + "}\n")
+        parts.append("\\paragraph{" + tex_inline(case["title"]) + "}\n")
         parts.append(tex_body(case["raw"]) + "\n")
         if slide.get("supplement"):
             parts.append("\\paragraph{" + tex_escape(slide["supplement"]["title"]) + "}\n")
