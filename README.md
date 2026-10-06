@@ -41,5 +41,3 @@
 - [한국거래소 — 코스피200 선물](https://global.krx.co.kr/contents/GLB/02/0201/0201040201/GLB0201040201.jsp)
 - [Harry Markowitz, *Portfolio Selection* (1952)](https://doi.org/10.1111/j.1540-6261.1952.tb01525.x)
 - [미국 연방준비제도 — 위험 프리미엄](https://www.federalreserve.gov/publications/may-2021-asset-valuations.htm)
-
-이 자료의 예시는 개념 설명을 위한 것이며 수익률 예측이나 투자 권유가 아닙니다.
