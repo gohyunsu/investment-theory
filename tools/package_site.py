@@ -17,6 +17,7 @@ if len(manifest) != 66:
 
 allowed = [
     "index.html",
+    "favicon.svg",
     "style.css",
     "app.js",
     "data.json",
