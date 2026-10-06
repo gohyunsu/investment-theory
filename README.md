@@ -8,7 +8,7 @@
 2. **불확실성의 측정** — 보유기간 수익률, 모멘트, 표본 추정, VaR, 공분산.
 3. **분산과 최적화** — 자본배분선, 샤프비율, 최소분산과 접점 포트폴리오.
 
-웹 가이드의 첫 화면은 세 장의 학습 경로를 보여주고, 각 장은 22개의 슬라이드 이미지와 해설을 세로로 이어서 제시합니다. 검색으로 개념을 찾고, 이미지를 확대하고, 상관계수를 바꾸며 포트폴리오의 위험을 탐색할 수 있습니다. 16개 보충 설명은 해당 장면에서 펼쳐 읽을 수 있습니다. [PDF 가이드](guide.pdf)와 [LaTeX 원고](guide.tex)에는 같은 본문과 보충 설명이 순서대로 담겨 있습니다.
+웹 가이드의 첫 화면은 세 장의 학습 경로를 보여주고, 각 장은 22개의 슬라이드 이미지와 해설을 세로로 이어서 제시합니다. 검색으로 개념을 찾고, 이미지를 확대하고, 상관계수를 바꾸며 포트폴리오의 위험을 탐색할 수 있습니다. 각 슬라이드의 질문과 계산 사례 66개, 심화 설명 16개는 해당 장면에서 펼쳐 읽을 수 있습니다. [PDF 가이드](guide.pdf)와 [LaTeX 원고](guide.tex)에도 같은 내용이 순서대로 담겨 있습니다.
 
 ## 핵심 계산
 
@@ -23,6 +23,7 @@
 | --- | --- |
 | `content/01-intro.md` 등 | 3개 장, 66개 장면의 본문 |
 | `content/deep-dives.md` | 66개 슬라이드별 상세 해설 |
+| `content/questions-cases.md` | 66개 슬라이드별 질문과 계산 사례 |
 | `content/supplements.md` | 펼쳐 읽는 심화 설명 |
 | `assets/slides/` | 장면별 웹 이미지 |
 | `tools/build.py` | 단일 원고에서 사이트 데이터와 LaTeX 문서 생성 |
@@ -39,6 +40,8 @@
 - [SEC Investor.gov — 자산배분과 분산투자](https://www.investor.gov/introduction-investing/getting-started/asset-allocation)
 - [SEC Investor.gov — 투자 위험](https://www.investor.gov/introduction-investing/investing-basics/what-risk)
 - [미국 재무부 — 국채 가격과 금리](https://www.treasurydirect.gov/marketable-securities/understanding-pricing/)
+- [미국 재무부 — 물가연동국채](https://www.treasurydirect.gov/marketable-securities/tips/)
+- [SEC Investor.gov — 인덱스펀드의 비용과 추적오차](https://www.investor.gov/introduction-investing/general-resources/news-alerts/alerts-bulletins/investor-bulletins-26)
 - [FINRA — 증거금 거래](https://www.finra.org/investors/investing/investment-products/stocks)
 - [한국거래소 — 코스피200 선물](https://global.krx.co.kr/contents/GLB/02/0201/0201040201/GLB0201040201.jsp)
 - [Harry Markowitz, *Portfolio Selection* (1952)](https://doi.org/10.1111/j.1540-6261.1952.tb01525.x)

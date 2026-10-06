@@ -21,6 +21,7 @@ for slide in slides:
     with Image.open(image) as picture:
         assert picture.width >= 1500 and picture.height >= 900, slide["id"]
     assert slide["title"] and slide["html"] and "\ufffd" not in slide["html"]
+    assert slide["case"]["title"] and slide["case"]["html"] and "\ufffd" not in slide["case"]["html"]
 
 for chapter_number, chapter_slug in enumerate(("01-intro", "02-risk-return", "03-two-assets"), 1):
     page = (root / "lecture" / f"{chapter_number:02}.html").read_text(encoding="utf-8")
@@ -31,6 +32,7 @@ for chapter_number, chapter_slug in enumerate(("01-intro", "02-risk-return", "03
         assert f'id="s{slide["page"]:02}"' in page
         assert f'../{slide["image"]}' in page
     assert page.count('width="1600" height="1200"') == 22
+    assert page.count('class="case-note"') == 22
 assert (root / "index.html").read_text(encoding="utf-8").count('<a class="overview-card ') == 3
 
 assert not list(root.rglob("*_original.txt"))
@@ -50,4 +52,4 @@ assert math.isclose((.12166405023547881-.05)/.13942890853347567, .51398272416564
 assert math.isclose(-.10 + .15 * math.exp(-1.96**2 / 2) / math.sqrt(2*math.pi) / .025, .2506456660007088, abs_tol=1e-12)
 assert math.isclose(1.5*(-.20)-.5*.07, -.335, abs_tol=1e-12)
 assert math.isclose(2*.6*.4*.15*.20, .0144, abs_tol=1e-12)
-print("66 slide mappings, image dimensions, publication exclusions and calculations passed")
+print("66 slide mappings and questions, image dimensions, publication exclusions and calculations passed")

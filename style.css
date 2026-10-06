@@ -73,6 +73,9 @@ details{border:1px solid #dce6e7;border-radius:8px;background:#f1f7f6;padding:0 
 details summary{cursor:pointer;font-size:13px;font-weight:750;color:#1d5b61;padding:12px 2px;list-style-position:outside}
 details[open] summary{border-bottom:1px solid #d5e5e3}
 details p{padding:13px 2px 15px;font-size:14px;color:#3e5361;margin:0!important}
+.case-note{background:#f4f7fb;border-color:#d9e3ed}
+.case-note summary{color:#244c73}
+.case-note[open] summary{border-bottom-color:#d9e3ed}
 .concept-figure{margin:26px 0 7px;padding:20px;border:1px solid var(--line);border-radius:10px;background:#fff}
 .concept-figure img{display:block;width:100%;height:auto}
 .concept-figure figcaption{font-size:11px;color:#8190a0;margin-top:8px;text-align:right}

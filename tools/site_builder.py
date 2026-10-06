@@ -31,6 +31,8 @@ REFERENCES = [
     ("미국 재무부 · 국채 가격과 금리", "https://www.treasurydirect.gov/marketable-securities/understanding-pricing/"),
     ("FINRA · 주식 투자", "https://www.finra.org/investors/investing/investment-products/stocks"),
     ("FINRA · 채권과 듀레이션", "https://www.finra.org/investors/investing/investment-products/bonds"),
+    ("미국 SEC · 인덱스펀드의 비용과 추적오차", "https://www.investor.gov/introduction-investing/general-resources/news-alerts/alerts-bulletins/investor-bulletins-26"),
+    ("미국 재무부 · 물가연동국채(TIPS)", "https://www.treasurydirect.gov/marketable-securities/tips/"),
     ("한국거래소 · 코스피200 선물", "https://global.krx.co.kr/contents/GLB/02/0201/0201040201/GLB0201040201.jsp"),
     ("Markowitz (1952) · Portfolio Selection", "https://doi.org/10.1111/j.1540-6261.1952.tb01525.x"),
     ("미국 연방준비제도 · 위험 프리미엄", "https://www.federalreserve.gov/publications/may-2021-asset-valuations.htm"),
@@ -69,7 +71,7 @@ def home(slides: list[dict]) -> str:
     refs = ''.join(f'<li><a href="{e(url)}" target="_blank" rel="noopener noreferrer">{e(label)}</a></li>' for label, url in REFERENCES)
     content = f'''<main id="main" class="home-main"><section class="home-hero"><div class="eyebrow">2026 · 2학기 · 학습 가이드</div><h1>투자의 언어에서<br><em>포트폴리오의 선택</em>까지</h1><p>금융자산의 현금흐름을 이해하고, 수익률과 위험을 측정한 뒤, 두 자산의 분산효과와 효율적인 투자 조합을 직접 유도한다. 각 슬라이드와 해설이 같은 자리에서 이어진다.</p><div class="hero-actions"><a class="primary-button" href="lecture/01.html">처음부터 읽기 <span>→</span></a><a class="pdf-link" href="guide.pdf" download>PDF 내려받기 ↓</a><span>3개 장 · {len(slides)}개 슬라이드</span></div><div class="hero-formula" aria-label="포트폴리오 분산">$$\\sigma_p^2=\\mathbf{{w}}^\\top\\Sigma\\mathbf{{w}}$$</div></section>
 <section class="learning-path"><div class="section-kicker">학습 경로</div><h2>한 흐름으로 연결되는 세 장</h2><div class="path-line"><span>자산의 현금흐름</span><b>→</b><span>수익률과 위험</span><b>→</b><span>분산투자</span><b>→</b><span>효율적 선택</span></div><div class="overview-grid">{''.join(cards)}</div></section>
-<section class="home-note"><h2>읽는 방법</h2><p>왼쪽에서 슬라이드 원본의 화면을 확인하고 오른쪽 해설에서 개념의 배경, 계산 과정, 경제학적 의미를 따라가세요. 이미지를 눌러 확대할 수 있고, 보충 설명은 필요한 곳에서 펼쳐 볼 수 있습니다.</p><details class="further-reading"><summary>더 읽을 자료</summary><ul>{refs}</ul></details></section>{footer('')}</main>'''
+<section class="home-note"><h2>읽는 방법</h2><p>왼쪽에서 슬라이드 화면을 확인하고 오른쪽 해설에서 개념의 배경, 계산 과정, 경제학적 의미를 따라가세요. 이미지를 눌러 확대할 수 있습니다. 각 슬라이드의 질문과 사례, 필요한 보충 설명은 펼쳐 읽을 수 있습니다.</p><details class="further-reading"><summary>더 읽을 자료</summary><ul>{refs}</ul></details></section>{footer('')}</main>'''
     return layout('', '전체 목차', '투자와 금융자산, 수익률과 위험, 두 자산 포트폴리오를 66개 슬라이드에 따라 배우는 학습 가이드.', content)
 
 
@@ -86,10 +88,12 @@ def lecture(chapter: dict, slides: list[dict], chapter_index: int) -> str:
     for s in own:
         slide_number = f'{s["page"]:02}'
         src = '../' + s['image']
+        case = s['case']
+        case_html = f'<details class="case-note"><summary>질문과 사례 · {e(case["title"])}</summary>{case["html"]}</details>'
         supplement = s.get('supplement')
         supplement_html = f'<details><summary>{e(supplement["title"])}</summary>{supplement["html"]}</details>' if supplement else ''
         lab = '<div id="portfolio-lab"></div>' if s['id'] == '03-two-assets/18' else ''
-        sections.append(f'''<section class="slide" id="s{slide_number}" data-slide="{slide_number}"><div class="slide-heading"><span class="slide-index">{number} / {slide_number}</span><h2>{e(s['title'])}</h2></div><div class="slide-grid"><figure class="slide-figure"><button type="button" class="slide-image-button" data-zoom-src="{e(src)}" data-zoom-label="{e(chapter['title'])} · 슬라이드 {slide_number}" aria-label="슬라이드 {slide_number} 이미지 확대"><img src="{e(src)}" alt="{e(chapter['title'])} 슬라이드 {slide_number}: {e(s['title'])}" width="1600" height="1200" loading="lazy" decoding="async"><span class="zoom-hint">확대해서 보기 ↗</span></button><figcaption>슬라이드 {slide_number}</figcaption></figure><div class="explanation">{s['html']}{supplement_html}{lab}</div></div></section>''')
+        sections.append(f'''<section class="slide" id="s{slide_number}" data-slide="{slide_number}"><div class="slide-heading"><span class="slide-index">{number} / {slide_number}</span><h2>{e(s['title'])}</h2></div><div class="slide-grid"><figure class="slide-figure"><button type="button" class="slide-image-button" data-zoom-src="{e(src)}" data-zoom-label="{e(chapter['title'])} · 슬라이드 {slide_number}" aria-label="슬라이드 {slide_number} 이미지 확대"><img src="{e(src)}" alt="{e(chapter['title'])} 슬라이드 {slide_number}: {e(s['title'])}" width="1600" height="1200" loading="lazy" decoding="async"><span class="zoom-hint">확대해서 보기 ↗</span></button><figcaption>슬라이드 {slide_number}</figcaption></figure><div class="explanation">{s['html']}{case_html}{supplement_html}{lab}</div></div></section>''')
     prev = CHAPTERS[chapter_index - 1] if chapter_index else None
     next_ = CHAPTERS[chapter_index + 1] if chapter_index + 1 < len(CHAPTERS) else None
     pager = f'<a href="{prev["number"]}.html"><small>이전 장</small><strong>← {e(prev["title"])}</strong></a>' if prev else '<span></span>'
@@ -99,7 +103,7 @@ def lecture(chapter: dict, slides: list[dict], chapter_index: int) -> str:
 
 
 def build_site(root: Path, slides: list[dict]) -> None:
-    data = [{k: (v.replace(r'\boldsymbol', r'\mathbf') if k == 'html' else v) for k, v in slide.items() if k not in ('raw', 'supplement')} | ({'supplement': {'title': slide['supplement']['title'], 'html': slide['supplement']['html'].replace(r'\boldsymbol', r'\mathbf')}} if slide.get('supplement') else {}) for slide in slides]
+    data = [{k: (v.replace(r'\boldsymbol', r'\mathbf') if k == 'html' else v) for k, v in slide.items() if k not in ('raw', 'case', 'supplement')} | {'case': {'title': slide['case']['title'], 'html': slide['case']['html'].replace(r'\boldsymbol', r'\mathbf')}} | ({'supplement': {'title': slide['supplement']['title'], 'html': slide['supplement']['html'].replace(r'\boldsymbol', r'\mathbf')}} if slide.get('supplement') else {}) for slide in slides]
     (root / 'data.json').write_text(json.dumps(data, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
     (root / 'index.html').write_text(home(data), encoding='utf-8')
     lecture_dir = root / 'lecture'

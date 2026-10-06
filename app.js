@@ -20,7 +20,7 @@ function getSlides() {
   }).then(data => {
     const parser = document.createElement('div');
     slideData = data.map(slide => {
-      parser.innerHTML = slide.html + (slide.supplement?.html || '');
+      parser.innerHTML = slide.html + (slide.case?.html || '') + (slide.supplement?.html || '');
       return {...slide, text: parser.textContent.replace(/\s+/g, ' ')};
     });
     return slideData;

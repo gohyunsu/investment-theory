@@ -21,6 +21,7 @@ CHAPTERS = [
 SLIDE_RE = re.compile(r"^## (\d+)\. (.+)$", re.MULTILINE)
 SUPPLEMENT_RE = re.compile(r"^## ([\w-]+/\d+) \| (.+)$", re.MULTILINE)
 DEEP_DIVE_RE = re.compile(r"^## ([\w-]+/\d+) \| (.+)$", re.MULTILINE)
+CASE_RE = re.compile(r"^## ([\w-]+/\d+) \| (.+)$", re.MULTILINE)
 MATH_RE = re.compile(r"(\$\$[\s\S]*?\$\$|\$[^$\n]+\$)")
 
 
@@ -83,6 +84,21 @@ def load_deep_dives() -> dict[str, str]:
         if not body:
             raise ValueError(f"Empty deep dive: {key}")
         result[key] = body
+    return result
+
+
+def load_cases() -> dict[str, dict]:
+    source = (ROOT / "content/questions-cases.md").read_text(encoding="utf-8")
+    matches = list(CASE_RE.finditer(source))
+    result = {}
+    for i, match in enumerate(matches):
+        key = match.group(1)
+        if key in result:
+            raise ValueError(f"Duplicate question and case: {key}")
+        body = source[match.end():matches[i + 1].start() if i + 1 < len(matches) else len(source)].strip()
+        if not body:
+            raise ValueError(f"Empty question and case: {key}")
+        result[key] = {"title": match.group(2), "raw": body, "html": render_markdown(body)}
     return result
 
 
@@ -161,6 +177,9 @@ def build_tex(slides: list[dict]) -> None:
             parts.append("\\section{" + tex_escape(slide["chapterName"]) + "}\n")
         parts.append("\\subsection{슬라이드 " + str(slide["page"]) + ": " + tex_escape(slide["title"]) + "}\n")
         parts.append(tex_body(slide["raw"]) + "\n")
+        case = slide["case"]
+        parts.append("\\paragraph{질문과 사례: " + tex_inline(case["title"]) + "}\n")
+        parts.append(tex_body(case["raw"]) + "\n")
         if slide.get("supplement"):
             parts.append("\\paragraph{" + tex_escape(slide["supplement"]["title"]) + "}\n")
             parts.append(tex_body(slide["supplement"]["raw"]) + "\n")
@@ -180,6 +199,11 @@ def main() -> None:
     for slide in slides:
         slide["raw"] += "\n\n" + deep_dives[slide["id"]]
         slide["html"] = render_markdown(slide["raw"])
+    cases = load_cases()
+    if set(cases) != slide_ids:
+        raise ValueError(f"Questions and cases must cover every slide: missing={slide_ids-set(cases)}, extra={set(cases)-slide_ids}")
+    for slide in slides:
+        slide["case"] = cases[slide["id"]]
     supplements = load_supplements()
     if set(supplements) - {slide["id"] for slide in slides}:
         raise ValueError("A supplement points to a missing slide")
