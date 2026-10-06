@@ -1,0 +1,16 @@
+__pycache__/
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+.DS_Store
+/_private/
+/slides/
+/scripts/
+/notes/
+*_original.txt
+*.pdf
+!guide.pdf
+/_build/
+/_site/
