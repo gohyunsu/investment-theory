@@ -159,7 +159,7 @@ def build_tex(slides: list[dict]) -> None:
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.55em}
 \setcounter{tocdepth}{2}
-\title{주식·채권·파생금융상품의 이론\\\large 슬라이드별 학습 가이드}
+\title{주식, 채권, 파생금융상품 1: 이론\\\large 슬라이드별 학습 가이드}
 \author{}
 \date{}
 \begin{document}
