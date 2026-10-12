@@ -1,7 +1,4 @@
-"""Build the GitHub Pages site and the matching standalone LaTeX guide.
-
-The three content files are the single editorial source for both outputs.
-"""
+"""Build the GitHub Pages site and matching standalone LaTeX guide."""
 from __future__ import annotations
 
 import html
@@ -17,7 +14,9 @@ CHAPTERS = [
     ("01-intro", "1부 · 투자와 금융자산", "투자의 구조"),
     ("02-risk-return", "2부 · 수익률과 위험", "불확실성의 측정"),
     ("03-two-assets", "3부 · 두 자산 포트폴리오", "분산과 최적화"),
+    ("04-mean-variance", "4부 · 여러 자산의 평균·분산 분석", "행렬과 효율적 프런티어"),
 ]
+EXPECTED_PAGES = {"01-intro": 22, "02-risk-return": 22, "03-two-assets": 22, "04-mean-variance": 17}
 SLIDE_RE = re.compile(r"^## (\d+)\. (.+)$", re.MULTILINE)
 SUPPLEMENT_RE = re.compile(r"^## ([\w-]+/\d+) \| (.+)$", re.MULTILINE)
 DEEP_DIVE_RE = re.compile(r"^## ([\w-]+/\d+) \| (.+)$", re.MULTILINE)
@@ -57,8 +56,9 @@ def slides_from_markdown(path: Path, slug: str, chapter: str) -> list[dict]:
             "html": render_markdown(body),
             "raw": body,
         })
-    if len(result) != 22 or [s["page"] for s in result] != list(range(1, 23)):
-        raise ValueError(f"{path}: expected exactly 22 ordered slide sections")
+    expected = EXPECTED_PAGES[slug]
+    if len(result) != expected or [s["page"] for s in result] != list(range(1, expected + 1)):
+        raise ValueError(f"{path}: expected exactly {expected} ordered slide sections")
     return result
 
 
@@ -212,8 +212,9 @@ def main() -> None:
             slide["supplement"] = supplements[slide["id"]]
     manifest = json.loads((ROOT / "assets/slide-manifest.json").read_text(encoding="utf-8"))
     assets = {item["path"] for item in manifest}
-    if len(slides) != 66 or len(assets) != 66 or any(s["image"] not in assets for s in slides):
-        raise ValueError("The guide and slide image manifest must align on all 66 pages")
+    expected_total = sum(EXPECTED_PAGES.values())
+    if len(slides) != expected_total or len(assets) != expected_total or any(s["image"] not in assets for s in slides):
+        raise ValueError(f"The guide and slide image manifest must align on all {expected_total} pages")
     build_tex(slides)
     from site_builder import build_site
     build_site(ROOT, slides)

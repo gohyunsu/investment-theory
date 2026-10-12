@@ -104,7 +104,7 @@ details p{padding:13px 2px 15px;font-size:14px;color:#3e5361;margin:0!important}
 .path-line{display:flex;flex-wrap:wrap;gap:13px;align-items:center;color:#667788;font-size:13px;margin-bottom:37px}
 .path-line span{border:1px solid var(--line);border-radius:99px;padding:5px 12px;background:#fff}
 .path-line b{color:#a9b6be;font-weight:400}
-.overview-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:17px}
+.overview-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:17px}
 .overview-card{display:flex;flex-direction:column;min-height:237px;border:1px solid var(--line);border-radius:12px;background:#fff;padding:22px;color:var(--ink);transition:transform .15s,box-shadow .15s}
 .overview-card:hover{text-decoration:none;transform:translateY(-3px);box-shadow:0 10px 26px rgba(24,39,59,.09)}
 .overview-card-top{display:flex;justify-content:space-between;font:700 12px ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--teal)}
@@ -115,6 +115,7 @@ details p{padding:13px 2px 15px;font-size:14px;color:#3e5361;margin:0!important}
 .card-arrow span{font-size:18px;line-height:1}
 .card-amber .overview-card-top,.card-amber .card-arrow{color:#a36324}
 .card-blue .overview-card-top,.card-blue .card-arrow{color:#356185}
+.card-purple .overview-card-top,.card-purple .card-arrow{color:#68519a}
 .home-note{border-top:1px solid var(--line);padding:35px 0 75px}
 .home-note p{max-width:760px;color:var(--muted);font-size:15px}
 .slide-dialog{width:min(96vw,1700px);max-width:none;max-height:94vh;padding:22px;border:none;border-radius:12px;background:#fff;box-shadow:0 20px 70px rgba(0,0,0,.28)}

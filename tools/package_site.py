@@ -12,8 +12,8 @@ if TARGET.parent != ROOT.resolve():
     raise RuntimeError("Unexpected publication directory")
 
 manifest = json.loads((ROOT / "assets/slide-manifest.json").read_text(encoding="utf-8"))
-if len(manifest) != 66:
-    raise RuntimeError("Expected exactly 66 slide images")
+if len(manifest) != 83:
+    raise RuntimeError("Expected exactly 83 slide images")
 
 allowed = [
     "index.html",
@@ -27,6 +27,7 @@ allowed = [
     "lecture/01.html",
     "lecture/02.html",
     "lecture/03.html",
+    "lecture/04.html",
 ]
 allowed += [entry["path"] for entry in manifest]
 if len(allowed) != len(set(allowed)):

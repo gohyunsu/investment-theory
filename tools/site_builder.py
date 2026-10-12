@@ -22,6 +22,11 @@ CHAPTERS = [
         "tagline": "분산투자·효율적 집합·접점",
         "intro": "자산을 둘로 나누면 기대수익은 비중의 가중평균이지만 위험은 공분산에 따라 달라진다. 이 차이에서 분산투자의 이익을 유도하고, 최소분산점과 효율적 프런티어를 거쳐 무위험자산을 포함한 최적 조합을 구한다.",
     },
+    {
+        "slug": "04-mean-variance", "number": "04", "title": "여러 자산의 평균·분산 분석",
+        "tagline": "행렬·GMVP·접점 포트폴리오",
+        "intro": "두 자산에서 익힌 평균·분산 분석을 여러 위험자산으로 확장한다. 벡터와 공분산행렬로 포트폴리오의 평균과 분산을 표현하고, 목표수익률별 최소분산 해에서 GMVP와 two-fund separation을 유도한다. 무위험자산을 추가한 뒤 접점 비중까지 구한다.",
+    },
 ]
 
 REFERENCES = [
@@ -35,6 +40,7 @@ REFERENCES = [
     ("미국 재무부 · 물가연동국채(TIPS)", "https://www.treasurydirect.gov/marketable-securities/tips/"),
     ("한국거래소 · 코스피200 선물", "https://global.krx.co.kr/contents/GLB/02/0201/0201040201/GLB0201040201.jsp"),
     ("Markowitz (1952) · Portfolio Selection", "https://doi.org/10.1111/j.1540-6261.1952.tb01525.x"),
+    ("Merton (1972) · An Analytic Derivation of the Efficient Portfolio Frontier", "https://dspace.mit.edu/entities/publication/19e0da6f-0f19-4ec2-930d-8c53e8ddbb29"),
     ("미국 연방준비제도 · 위험 프리미엄", "https://www.federalreserve.gov/publications/may-2021-asset-valuations.htm"),
 ]
 
@@ -67,12 +73,12 @@ def home(slides: list[dict]) -> str:
     cards = []
     for i, chapter in enumerate(CHAPTERS):
         count = sum(s["chapter"] == chapter["slug"] for s in slides)
-        cards.append(f'''<a class="overview-card card-{('blue','teal','amber')[i]}" href="lecture/{chapter['number']}.html"><div class="overview-card-top"><span>{chapter['number']}</span><span>{count}개 슬라이드</span></div><h3>{e(chapter['title'])}</h3><p>{e(chapter['tagline'])}</p><div class="card-arrow">학습하기 <span>↗</span></div></a>''')
+        cards.append(f'''<a class="overview-card card-{('blue','teal','amber','purple')[i]}" href="lecture/{chapter['number']}.html"><div class="overview-card-top"><span>{chapter['number']}</span><span>{count}개 슬라이드</span></div><h3>{e(chapter['title'])}</h3><p>{e(chapter['tagline'])}</p><div class="card-arrow">학습하기 <span>↗</span></div></a>''')
     refs = ''.join(f'<li><a href="{e(url)}" target="_blank" rel="noopener noreferrer">{e(label)}</a></li>' for label, url in REFERENCES)
-    content = f'''<main id="main" class="home-main"><section class="home-hero"><div class="eyebrow">주식, 채권, 파생금융상품 1: 이론</div><h1>투자의 원리부터<br><em>포트폴리오 선택까지</em></h1><p>금융자산의 현금흐름을 이해하고, 수익률과 위험을 측정한 뒤, 두 자산의 분산효과와 효율적인 투자 조합을 직접 유도한다. 각 슬라이드와 해설이 같은 자리에서 이어진다.</p><div class="hero-actions"><a class="primary-button" href="lecture/01.html">처음부터 읽기 <span>→</span></a><a class="pdf-link" href="guide.pdf" download>PDF 내려받기 ↓</a><span>3개 장 · {len(slides)}개 슬라이드</span></div><div class="hero-formula" aria-label="포트폴리오 분산">$$\\sigma_p^2=\\mathbf{{w}}^\\top\\Sigma\\mathbf{{w}}$$</div></section>
-<section class="learning-path"><div class="section-kicker">학습 경로</div><h2>한 흐름으로 연결되는 세 장</h2><div class="path-line"><span>자산의 현금흐름</span><b>→</b><span>수익률과 위험</span><b>→</b><span>분산투자</span><b>→</b><span>효율적 선택</span></div><div class="overview-grid">{''.join(cards)}</div></section>
+    content = f'''<main id="main" class="home-main"><section class="home-hero"><div class="eyebrow">주식, 채권, 파생금융상품 1: 이론</div><h1>투자의 원리부터<br><em>포트폴리오 선택까지</em></h1><p>금융자산의 현금흐름을 이해하고, 수익률과 위험을 측정한 뒤, 두 자산에서 여러 자산으로 확장하는 포트폴리오 선택을 직접 유도한다. 각 슬라이드와 해설이 같은 자리에서 이어진다.</p><div class="hero-actions"><a class="primary-button" href="lecture/01.html">처음부터 읽기 <span>→</span></a><a class="pdf-link" href="guide.pdf" download>PDF 내려받기 ↓</a><span>{len(CHAPTERS)}개 장 · {len(slides)}개 슬라이드</span></div><div class="hero-formula" aria-label="포트폴리오 분산">$$\\sigma_p^2=\\mathbf{{w}}^\\top\\Sigma\\mathbf{{w}}$$</div></section>
+<section class="learning-path"><div class="section-kicker">학습 경로</div><h2>한 흐름으로 연결되는 네 장</h2><div class="path-line"><span>자산의 현금흐름</span><b>→</b><span>수익률과 위험</span><b>→</b><span>두 자산의 분산투자</span><b>→</b><span>여러 자산의 효율적 선택</span></div><div class="overview-grid">{''.join(cards)}</div></section>
 <section class="home-note"><h2>읽는 방법</h2><p>왼쪽에서 슬라이드 화면을 확인하고 오른쪽 해설에서 개념의 배경, 계산 과정, 경제학적 의미를 따라가세요. 이미지를 눌러 확대할 수 있습니다. 추가 설명은 필요한 곳에서 펼쳐 읽을 수 있습니다.</p><details class="further-reading"><summary>더 읽을 자료</summary><ul>{refs}</ul></details></section>{footer('')}</main>'''
-    return layout('', '전체 목차', '투자와 금융자산, 수익률과 위험, 두 자산 포트폴리오를 66개 슬라이드에 따라 배우는 학습 가이드.', content)
+    return layout('', '전체 목차', f'투자와 금융자산, 수익률과 위험, 포트폴리오 선택을 {len(slides)}개 슬라이드에 따라 배우는 학습 가이드.', content)
 
 
 def lecture(chapter: dict, slides: list[dict], chapter_index: int) -> str:

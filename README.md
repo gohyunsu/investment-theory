@@ -1,14 +1,15 @@
 # 주식, 채권, 파생금융상품 1: 이론
 
-투자와 금융자산, 수익률과 위험, 두 자산 포트폴리오를 66개의 순서 있는 장면으로 읽는 한국어 학습 가이드입니다. 각 장면은 화면 자료와 개념 설명을 나란히 제시하며, 수식은 가정에서 계산과 경제학적 해석까지 이어집니다.
+투자와 금융자산, 수익률과 위험, 두 자산 포트폴리오, 여러 자산의 평균·분산 분석을 83개의 순서 있는 장면으로 읽는 한국어 학습 가이드입니다. 각 장면은 화면 자료와 개념 설명을 나란히 제시하며, 수식은 가정에서 계산과 경제학적 해석까지 이어집니다.
 
 ## 읽는 순서
 
 1. **투자의 구조** — 실물·금융자산, 주식·채권·파생상품, 투자관리 과정.
 2. **불확실성의 측정** — 보유기간 수익률, 모멘트, 표본 추정, VaR, 공분산.
 3. **분산과 최적화** — 자본배분선, 샤프비율, 최소분산과 접점 포트폴리오.
+4. **여러 자산의 평균·분산 분석** — 공분산행렬, 효율적 프런티어, GMVP, two-fund separation, 접점 포트폴리오.
 
-웹 가이드의 첫 화면은 세 장의 학습 경로를 보여주고, 각 장은 22개의 슬라이드 이미지와 해설을 세로로 이어서 제시합니다. 검색으로 개념을 찾고, 이미지를 확대하고, 상관계수를 바꾸며 포트폴리오의 위험을 탐색할 수 있습니다. 각 슬라이드의 질문과 계산 사례 66개, 심화 설명 16개는 해당 장면에서 펼쳐 읽을 수 있습니다. [PDF 가이드](guide.pdf)와 [LaTeX 원고](guide.tex)에도 같은 내용이 순서대로 담겨 있습니다.
+웹 가이드의 첫 화면은 네 장의 학습 경로를 보여줍니다. 앞의 세 장은 각 22개, 네 번째 장은 17개의 슬라이드 이미지와 해설을 순서대로 제시합니다. 검색으로 개념을 찾고, 이미지를 확대하고, 상관계수를 바꾸며 포트폴리오의 위험을 탐색할 수 있습니다. 각 슬라이드의 추가 설명과 구체적인 계산 사례도 해당 장면에서 펼쳐 읽을 수 있습니다. [PDF 가이드](guide.pdf)와 [LaTeX 원고](guide.tex)에도 같은 내용이 순서대로 담겨 있습니다.
 
 ## 핵심 계산
 
@@ -21,9 +22,9 @@
 
 | 경로 | 역할 |
 | --- | --- |
-| `content/01-intro.md` 등 | 3개 장, 66개 장면의 본문 |
-| `content/deep-dives.md` | 66개 슬라이드별 상세 해설 |
-| `content/questions-cases.md` | 66개 슬라이드별 질문과 계산 사례 |
+| `content/01-intro.md` 등 | 4개 장, 83개 장면의 본문 |
+| `content/deep-dives.md` | 83개 슬라이드별 상세 해설 |
+| `content/questions-cases.md` | 83개 슬라이드별 질문과 계산 사례 |
 | `content/supplements.md` | 펼쳐 읽는 심화 설명 |
 | `assets/slides/` | 장면별 웹 이미지 |
 | `tools/build.py` | 단일 원고에서 사이트 데이터와 LaTeX 문서 생성 |
@@ -45,4 +46,5 @@
 - [FINRA — 증거금 거래](https://www.finra.org/investors/investing/investment-products/stocks)
 - [한국거래소 — 코스피200 선물](https://global.krx.co.kr/contents/GLB/02/0201/0201040201/GLB0201040201.jsp)
 - [Harry Markowitz, *Portfolio Selection* (1952)](https://doi.org/10.1111/j.1540-6261.1952.tb01525.x)
+- [Robert C. Merton, *An Analytic Derivation of the Efficient Portfolio Frontier* (1972)](https://dspace.mit.edu/entities/publication/19e0da6f-0f19-4ec2-930d-8c53e8ddbb29)
 - [미국 연방준비제도 — 위험 프리미엄](https://www.federalreserve.gov/publications/may-2021-asset-valuations.htm)

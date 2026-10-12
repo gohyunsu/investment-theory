@@ -12,8 +12,10 @@ from PIL import Image
 root = Path(__file__).resolve().parents[1]
 slides = json.loads((root / "data.json").read_text(encoding="utf-8"))
 manifest = json.loads((root / "assets/slide-manifest.json").read_text(encoding="utf-8"))
-assert len(slides) == len(manifest) == 66
-assert len({slide["id"] for slide in slides}) == 66
+expected_counts = {"01-intro": 22, "02-risk-return": 22, "03-two-assets": 22, "04-mean-variance": 17}
+expected_total = sum(expected_counts.values())
+assert len(slides) == len(manifest) == expected_total
+assert len({slide["id"] for slide in slides}) == expected_total
 assert [slide["image"] for slide in slides] == [entry["path"] for entry in manifest]
 for slide in slides:
     image = root / slide["image"]
@@ -23,17 +25,17 @@ for slide in slides:
     assert slide["title"] and slide["html"] and "\ufffd" not in slide["html"]
     assert slide["case"]["title"] and slide["case"]["html"] and "\ufffd" not in slide["case"]["html"]
 
-for chapter_number, chapter_slug in enumerate(("01-intro", "02-risk-return", "03-two-assets"), 1):
+for chapter_number, (chapter_slug, expected) in enumerate(expected_counts.items(), 1):
     page = (root / "lecture" / f"{chapter_number:02}.html").read_text(encoding="utf-8")
     chapter_slides = [slide for slide in slides if slide["chapter"] == chapter_slug]
-    assert len(chapter_slides) == 22
-    assert len(re.findall(r'<section class="slide" id="s\d{2}"', page)) == 22
+    assert len(chapter_slides) == expected
+    assert len(re.findall(r'<section class="slide" id="s\d{2}"', page)) == expected
     for slide in chapter_slides:
         assert f'id="s{slide["page"]:02}"' in page
         assert f'../{slide["image"]}' in page
-    assert page.count('width="1600" height="1200"') == 22
-    assert page.count('class="case-note"') == 22
-assert (root / "index.html").read_text(encoding="utf-8").count('<a class="overview-card ') == 3
+    assert page.count('width="1600" height="1200"') == expected
+    assert page.count('class="case-note"') == expected
+assert (root / "index.html").read_text(encoding="utf-8").count('<a class="overview-card ') == len(expected_counts)
 
 assert not list(root.rglob("*_original.txt"))
 pdfs = [path for path in root.rglob("*.pdf") if "_build" not in path.parts and "_site" not in path.parts]
@@ -52,4 +54,6 @@ assert math.isclose((.12166405023547881-.05)/.13942890853347567, .51398272416564
 assert math.isclose(-.10 + .15 * math.exp(-1.96**2 / 2) / math.sqrt(2*math.pi) / .025, .2506456660007088, abs_tol=1e-12)
 assert math.isclose(1.5*(-.20)-.5*.07, -.335, abs_tol=1e-12)
 assert math.isclose(2*.6*.4*.15*.20, .0144, abs_tol=1e-12)
-print("66 slide mappings and questions, image dimensions, publication exclusions and calculations passed")
+assert math.isclose(.5**2*.1**2+.3**2*.15**2+.2**2*.2**2+2*.5*.3*.003+2*.5*.2*.002+2*.3*.2*.009, .008505, abs_tol=1e-12)
+assert math.isclose((.04*.05-.006*.09)/((.04-.006)*.05+(.0225-.006)*.09), .45839874411302983, abs_tol=1e-12)
+print(f"{expected_total} slide mappings and questions, image dimensions, publication exclusions and calculations passed")

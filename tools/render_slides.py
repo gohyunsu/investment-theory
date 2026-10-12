@@ -18,6 +18,7 @@ SOURCES = [
     ("01-intro", "01_intro.pdf"),
     ("02-risk-return", "02_risk-return.pdf"),
     ("03-two-assets", "03_two-asset-portfolios.pdf"),
+    ("04-mean-variance", "04_mean-variance-analysis.pdf"),
 ]
 
 
