@@ -25,7 +25,7 @@ $$
 \mathbf 1^\top\mathbf w=\sum_{i=1}^n w_i=1.
 $$
 
-예를 들어 $\mathbf w=(.5,.3,.2)^\top$, $\boldsymbol\mu=(.08,.12,.16)^\top$이면 $\mu_p=.5(.08)+.3(.12)+.2(.16)=.108$이다. $\mathbf w^\top\boldsymbol\mu$가 이처럼 **가중평균**이라는 것을 먼저 확인하면 행렬 기호가 추상적이지 않다. 비중으로 미분할 때 $\partial(\mathbf w^\top\boldsymbol\mu)/\partial\mathbf w=\boldsymbol\mu$이고, $\boldsymbol\mu^\top$의 전치 기호는 미분 표시가 아니다.
+예를 들어 $\mathbf w=(.5,.3,.2)^\top$, $\boldsymbol\mu=(.08,.12,.16)^\top$이면 $\mu_p=.5(.08)+.3(.12)+.2(.16)=.108$이다. $\mathbf w^\top\boldsymbol\mu$는 $(1\times n)(n\times1)$의 곱이어서 결과가 하나의 숫자다. 그 숫자를 전치해도 같으므로 $\boldsymbol\mu^\top\mathbf w=\mathbf w^\top\boldsymbol\mu$다. 비중에 대한 gradient는 $\nabla_{\mathbf w}(\mathbf w^\top\boldsymbol\mu)=\boldsymbol\mu$로, 각 비중을 조금 높였을 때 평균이 해당 자산의 $\mu_i$만큼 움직인다는 뜻이다. 전치 기호 $\top$는 미분 표시가 아니다.
 
 ## 5. 공분산행렬과 이차형식의 뜻
 
@@ -37,7 +37,7 @@ $$
 +2w_1w_2\sigma_{12}+2w_1w_3\sigma_{13}+2w_2w_3\sigma_{23}.
 $$
 
-공분산 항의 계수 2는 $(w_1X_1+w_2X_2+w_3X_3)^2$를 전개할 때 $X_iX_j$와 $X_jX_i$가 함께 나오기 때문이다. 대칭인 $\Omega$에 대해 $\nabla_{\mathbf w}(\tfrac12\mathbf w^\top\Omega\mathbf w)=\Omega\mathbf w$다. 앞의 $\tfrac12$가 이차식의 미분에서 생기는 2를 상쇄한다. 임의의 비중에 대해 분산이 음수가 될 수 없으므로 공분산행렬은 양의 준정부호여야 한다.
+공분산 항의 계수 2는 $(w_1X_1+w_2X_2+w_3X_3)^2$를 전개할 때 $X_iX_j$와 $X_jX_i$가 함께 나오기 때문이다. $\Omega\mathbf w$의 $i$번째 성분은 $\sum_jw_j\operatorname{Cov}(R_i,R_j)=\operatorname{Cov}(R_i,R_p)$다. 따라서 분산의 gradient $2\Omega\mathbf w$는 각 자산의 비중을 조금 늘릴 때의 **한계위험**을 나타낸다. 라그랑지안에서 $\tfrac12\mathbf w^\top\Omega\mathbf w$를 쓰면 미분 결과가 $\Omega\mathbf w$로 간결해진다. 임의의 비중에 대해 분산이 음수가 될 수 없으므로 공분산행렬은 양의 준정부호여야 한다.
 
 ## 6. 세 위험자산의 평균과 분산을 직접 계산하기
 
@@ -69,7 +69,15 @@ L=\tfrac12\mathbf w^\top\Omega\mathbf w
 +\lambda(1-\mathbf 1^\top\mathbf w).
 $$
 
-비중에 대한 일계조건은 $\Omega\mathbf w-\gamma\boldsymbol\mu-\lambda\mathbf1=0$이다. $\Omega$가 역행렬을 가지면 $\mathbf w=\Omega^{-1}(\gamma\boldsymbol\mu+\lambda\mathbf1)$을 얻는다. 이제 $A=\mathbf1^\top\Omega^{-1}\mathbf1$, $B=\boldsymbol\mu^\top\Omega^{-1}\mathbf1$, $C=\boldsymbol\mu^\top\Omega^{-1}\boldsymbol\mu$라 두면 제약식이 $C\gamma+B\lambda=m$, $B\gamma+A\lambda=1$이 된다. 이를 연립해
+비중에 대한 일계조건은 $\Omega\mathbf w-\gamma\boldsymbol\mu-\lambda\mathbf1=0$이다. $\Omega$가 역행렬을 가지면 $\mathbf w=\Omega^{-1}(\gamma\boldsymbol\mu+\lambda\mathbf1)$을 얻는다. 이 비중은 반드시 **두 제약**을 만족해야 하므로 다시 평균식과 합계식에 대입한다. $A=\mathbf1^\top\Omega^{-1}\mathbf1$, $B=\boldsymbol\mu^\top\Omega^{-1}\mathbf1$, $C=\boldsymbol\mu^\top\Omega^{-1}\boldsymbol\mu$라 두면
+
+$$
+\begin{pmatrix}C&B\\B&A\end{pmatrix}
+\begin{pmatrix}\gamma\\\lambda\end{pmatrix}
+=\begin{pmatrix}m\\1\end{pmatrix}.
+$$
+
+첫째 식에 $A$, 둘째 식에 $B$를 곱해 빼면 $(AC-B^2)\gamma=Am-B$다. 둘째 식에 $C$, 첫째 식에 $B$를 곱해 빼면 $(AC-B^2)\lambda=C-Bm$이다. 따라서
 
 $$
 \Delta=AC-B^2,\qquad
@@ -77,7 +85,7 @@ $$
 \lambda=\frac{C-Bm}{\Delta}
 $$
 
-를 얻는다. $A,B,C$는 각각 위험으로 조정한 전체 비중의 크기, 평균과 비중의 결합, 평균의 크기를 요약한다. $\Delta>0$은 기대수익률이 모두 같지 않은 정상적인 경우에 해당한다.
+를 얻는다. $A,B,C$는 긴 행렬 곱을 세 숫자로 요약한 표기다. 공분산행렬이 양의 정부호이고 자산들의 기대수익률이 모두 같지 않으면 $\Delta>0$이다. 이 조건은 목표 평균과 비중 합계가 독립적인 제약임을 보장한다.
 
 ## 9. 평균·분산 경계의 방정식을 끝까지 유도하기
 
@@ -88,7 +96,14 @@ $$
 =\frac1A+\frac{A}{\Delta}\left(m-\frac BA\right)^2.
 $$
 
-두 번째 식은 완전제곱으로 얻는다. 분산을 가로축에 놓으면 $m$의 이차식 관계이고, 표준편차를 가로축에 놓으면 $\sigma_p^2$ 대신 $\sigma_p$를 써서 쌍곡선의 위·아래 가지처럼 보인다. 같은 위험에는 일반적으로 높은 평균과 낮은 평균의 두 점이 있다. 효율적 프런티어는 $m\ge B/A$인 **위쪽 가지**다. 수식의 분모 $\Delta$가 0이면 모든 평균을 갖는 정상적인 곡선을 그릴 수 없으므로 별도로 다뤄야 한다.
+두 번째 식은 완전제곱으로 얻는다. $\mu_G=B/A$, $\sigma_G^2=1/A$라 쓰면 분산을 가로축에 둔 그림에서는 $\sigma_p^2=\sigma_G^2+(A/\Delta)(m-\mu_G)^2$가 **옆으로 열린 포물선**이다. 표준편차를 가로축에 두면 같은 식을
+
+$$
+\frac{\sigma_p^2}{\sigma_G^2}
+-\frac{(m-\mu_G)^2}{\Delta/A^2}=1
+$$
+
+로 써서 쌍곡선의 두 가지로 읽는다. $m=\mu_G+d$와 $m=\mu_G-d$는 위험이 같고, 평균이 높은 쪽이 다른 쪽을 지배한다. 따라서 효율적 프런티어는 $m\ge\mu_G$인 **위쪽 가지**다. $\Delta=0$이면 서로 다른 목표 평균으로 경계를 그리는 이 방식이 성립하지 않는다.
 
 ## 10. 글로벌 최소분산 포트폴리오를 찾기
 
@@ -169,6 +184,4 @@ $\sigma_c$는 전체 계좌의 표준편차, $\sigma_P$는 접점 포트폴리�
 
 ## 17. 평균·분산 선택에서 CAPM으로 넘어가기
 
-지금까지는 개별 투자자가 기대수익률 $\boldsymbol\mu$와 공분산 $\Omega$를 **이미 알고 있다**고 놓고 최적 비중을 구했다. 다음 단계에서는 모든 투자자의 선택을 합쳤을 때 시장에서 실제로 공급된 자산 수량과 수요가 맞아야 한다는 시장청산 조건을 더한다. 그 조건 아래 접점 포트폴리오를 시장포트폴리오와 연결하면 CAPM의 가격결정 논리가 출발한다.
-
-개별 종목의 고유한 위험은 분산투자로 줄일 수 있다. 시장과 함께 움직이는 위험이 기대수익률에 어떻게 반영되는지가 다음 질문이다. 접점 포트폴리오를 시장포트폴리오와 연결하려면 투자자의 공통 기대와 시장청산 등 균형 가정이 추가된다.
+지금까지는 기대수익률 $\boldsymbol\mu$와 공분산 $\Omega$가 주어졌을 때 투자자 한 명의 최적 비중을 구했다. CAPM은 투자자들이 공통 기대를 가지고, 위험자산의 총수요가 실제 공급과 같다는 **시장청산** 조건을 더한다. 이때 접점 포트폴리오를 시장포트폴리오에 연결하면 개별 자산의 **시장과 함께 움직이는 위험**이 기대수익률에 어떻게 반영되는지 설명할 수 있다.
