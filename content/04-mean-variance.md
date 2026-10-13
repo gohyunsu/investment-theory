@@ -1,20 +1,20 @@
 ## 1. 여러 위험자산으로 넓히는 평균·분산 분석
 
-두 위험자산에서는 첫 자산의 비중 $w$만 정하면 둘째 비중은 $1-w$였다. 자산이 $n$개면 비중은 $w_1,\ldots,w_n$이고 합계가 1이라는 조건 아래 $n-1$개를 독립적으로 고를 수 있다. 그림에 모든 조합을 직접 표시하기 어려워지므로 **벡터와 행렬**로 평균·분산을 한 번에 계산한다.
+두 위험자산에서는 첫 자산의 비중 $w$만 정하면 둘째 비중은 $1-w$였다. 자산이 $n$개면 비중은 $w_1,\ldots,w_n$이고 합계가 1이라는 조건 아래 $n-1$개를 독립적으로 고를 수 있다. 위험 계산에 필요한 공분산 항도 자산쌍마다 생긴다.
 
-기대수익은 비중의 가중평균이고, 위험에는 모든 자산쌍의 공분산이 들어간다. 벡터와 행렬로 이 두 계산을 묶으면 자산 수가 늘어나도 같은 원리로 최소분산 포트폴리오와 효율적 프런티어를 구할 수 있다.
+벡터는 비중과 예상 수익률을, 행렬은 모든 자산쌍의 공분산을 한데 적는다. 이 표기 덕분에 두 자산에서 배운 최적화 원리를 $n$개 자산에 그대로 적용할 수 있다.
 
 ## 2. 평균·분산 선택의 질문을 먼저 고정하기
 
 평균·분산 분석은 가능한 모든 비중 가운데 **같은 기대수익률에서 분산이 가장 낮은 조합**을 찾는 문제다. 이렇게 얻은 점들의 집합이 최소분산 경계다. 그중 최소분산점보다 기대수익률이 높은 쪽을 효율적 프런티어라고 부른다. 위험에 비해 기대수익이 낮은 아래쪽 가지는 같은 위험에서 더 높은 평균을 주는 조합에 지배된다.
 
-자산의 과거 평균을 미래 기대수익률로, 과거 공분산을 미래 공분산으로 쓸 때는 추정 오차가 생긴다. 여기서는 먼저 입력값이 주어졌다고 가정해 **기준 해**를 유도하고, 마지막에 공매도·차입금리·추정 오차가 그 해를 어떻게 바꾸는지 구분한다. 수학적으로 가능한 비중과 실제 거래 가능한 비중도 같은 뜻이 아니다.
+우선 기대수익률 벡터와 공분산행렬이 주어지고 공매도가 가능하다고 가정한다. 뒤에서 무위험자산을 추가하며, 거래 제약이나 추정 오차를 반영할 때는 허용 비중과 입력값을 다시 지정한다.
 
 ## 3. 네 단계로 읽는 계산 지도
 
-첫째, 비중 벡터 $\mathbf w$, 기대수익률 벡터 $\boldsymbol\mu$, 공분산행렬 $\Omega$를 정한다. 둘째, 무위험자산이 없을 때 목표 기대수익률 $m$을 고정하고 분산을 최소화한다. 셋째, $m$을 바꾸며 경계를 그린 뒤 그중 글로벌 최소분산점(GMVP)을 찾는다. 넷째, 무위험자산을 넣으면 가장 높은 기대 초과수익을 위험 한 단위당 주는 접점 포트폴리오를 구한다.
+앞으로 세 종류의 해가 나온다. 목표수익률 $m$에 대한 최소분산 해는 **평균을 고정한 채** 위험을 최소화한다. 글로벌 최소분산 포트폴리오(GMVP)는 **평균 목표 없이** 위험 자체를 최소화한다. 접점 포트폴리오는 무위험자산이 있을 때 **샤프비율**을 최대화한다.
 
-세 최적화의 목적을 구분한다. 목표수익률별 해는 **평균을 고정한 상태에서** 분산을 최소화한다. GMVP는 그 경계에서 **분산 자체**가 가장 낮은 점이고, 접점 포트폴리오는 무위험수익률을 기준으로 **샤프비율**이 가장 높은 점이다.
+세 문제는 목적함수와 제약이 다르므로 같은 비중을 줄 필요가 없다. 계산 순서는 비중·평균·공분산의 행렬 표현, 목표별 경계, GMVP, 무위험자산을 포함한 접점이다.
 
 ## 4. 벡터·전치·내적을 수익률에 연결하기
 
@@ -25,7 +25,7 @@ $$
 \mathbf 1^\top\mathbf w=\sum_{i=1}^n w_i=1.
 $$
 
-예를 들어 $\mathbf w=(.5,.3,.2)^\top$, $\boldsymbol\mu=(.08,.12,.16)^\top$이면 $\mu_p=.5(.08)+.3(.12)+.2(.16)=.108$이다. $\mathbf w^\top\boldsymbol\mu$는 $(1\times n)(n\times1)$의 곱이어서 결과가 하나의 숫자다. 그 숫자를 전치해도 같으므로 $\boldsymbol\mu^\top\mathbf w=\mathbf w^\top\boldsymbol\mu$다. 비중에 대한 gradient는 $\nabla_{\mathbf w}(\mathbf w^\top\boldsymbol\mu)=\boldsymbol\mu$로, 각 비중을 조금 높였을 때 평균이 해당 자산의 $\mu_i$만큼 움직인다는 뜻이다. 전치 기호 $\top$는 미분 표시가 아니다.
+예를 들어 $\mathbf w=(.5,.3,.2)^\top$, $\boldsymbol\mu=(.08,.12,.16)^\top$이면 $\mu_p=.5(.08)+.3(.12)+.2(.16)=.108$이다. $\mathbf w^\top\boldsymbol\mu$는 $(1\times n)(n\times1)$의 곱이므로 숫자 하나다. 비중에 대한 gradient $\nabla_{\mathbf w}(\mathbf w^\top\boldsymbol\mu)=\boldsymbol\mu$는 다른 비중을 고정한 한계효과를 모은 벡터다.
 
 다만 $\mathbf1^\top\mathbf w=1$을 유지하려면 한 비중을 늘릴 때 다른 비중을 줄여야 한다. $\mathbf e_i$를 $i$번째 성분만 1인 표준기저벡터라 하자. 자산 $j$에서 $i$로 $\varepsilon$만큼 옮기는 변화 $\Delta\mathbf w=\varepsilon(\mathbf e_i-\mathbf e_j)$는 합계가 0이고, 평균 변화는 정확히 $\Delta\mu_p=\varepsilon(\mu_i-\mu_j)$다. 개별 편미분 $\mu_i$와 **예산을 지키는 교체 거래의 효과**를 구분한다.
 
@@ -39,7 +39,7 @@ $$
 +2w_1w_2\sigma_{12}+2w_1w_3\sigma_{13}+2w_2w_3\sigma_{23}.
 $$
 
-공분산 항의 계수 2는 $(w_1X_1+w_2X_2+w_3X_3)^2$를 전개할 때 $X_iX_j$와 $X_jX_i$가 함께 나오기 때문이다. $\Omega\mathbf w$의 $i$번째 성분은 $\sum_jw_j\operatorname{Cov}(R_i,R_j)=\operatorname{Cov}(R_i,R_p)$다. 따라서 분산의 gradient $2\Omega\mathbf w$는 각 자산의 비중을 조금 늘릴 때의 **한계위험**을 나타낸다. 라그랑지안에서 $\tfrac12\mathbf w^\top\Omega\mathbf w$를 쓰면 미분 결과가 $\Omega\mathbf w$로 간결해진다. 임의의 비중에 대해 분산이 음수가 될 수 없으므로 공분산행렬은 양의 준정부호여야 한다.
+공분산 항의 계수 2는 $(w_1X_1+w_2X_2+w_3X_3)^2$를 전개할 때 $X_iX_j$와 $X_jX_i$가 함께 나오기 때문이다. $\Omega\mathbf w$의 $i$번째 성분은 $\sum_jw_j\operatorname{Cov}(R_i,R_j)=\operatorname{Cov}(R_i,R_p)$다. 대칭행렬의 이차형식을 미분하면 $\nabla_{\mathbf w}(\mathbf w^\top\Omega\mathbf w)=(\Omega+\Omega^\top)\mathbf w=2\Omega\mathbf w$다. 따라서 $2\Omega\mathbf w$는 다른 비중을 고정한 한계위험이다. 라그랑지안에 $\tfrac12\mathbf w^\top\Omega\mathbf w$를 쓰면 미분 결과가 $\Omega\mathbf w$로 간결해진다.
 
 행렬식의 출발점은 $\mathbf R=(R_1,\ldots,R_n)^\top$와 $\boldsymbol\mu=E[\mathbf R]$에 대한 $\Omega=E[(\mathbf R-\boldsymbol\mu)(\mathbf R-\boldsymbol\mu)^\top]$이다. 이를 대입하면 임의의 $\mathbf a$에 대해 $\mathbf a^\top\Omega\mathbf a=E[(\mathbf a^\top(\mathbf R-\boldsymbol\mu))^2]\ge0$다. 모든 $\mathbf a\ne0$에서 부등식이 엄격할 때 양의 **정부호**이며 역행렬이 존재한다. 이후의 닫힌 형태 해는 이 더 강한 조건을 사용한다.
 
@@ -91,7 +91,14 @@ $$
 
 를 얻는다. $A,B,C$는 긴 행렬 곱을 세 숫자로 요약한 표기다. 공분산행렬이 양의 정부호이고 자산들의 기대수익률이 모두 같지 않으면 $\Delta>0$이다. 이 조건은 목표 평균과 비중 합계가 독립적인 제약임을 보장한다.
 
-이로써 $\mathbf w(m)=\Omega^{-1}(\gamma\boldsymbol\mu+\lambda\mathbf1)$의 모든 계수가 정해졌다. 목적함수의 Hessian은 $\Omega$이고 양의 정부호이므로, 일계조건을 만족하는 이 비중은 제약을 지키는 다른 모든 비중보다 분산이 낮은 **유일한 전역 최소해**다. 음의 비중을 허용한다는 조건도 여기에 포함된다.
+이로써 $\mathbf w(m)=\Omega^{-1}(\gamma\boldsymbol\mu+\lambda\mathbf1)$의 모든 계수가 정해졌다. 일계조건의 해를 $\mathbf w_*$라 하고 같은 두 제약을 만족하는 다른 비중을 $\mathbf w_*+\mathbf u$라 쓰면 $\mathbf1^\top\mathbf u=\boldsymbol\mu^\top\mathbf u=0$이다. 따라서
+
+$$
+(\mathbf w_*+\mathbf u)^\top\Omega(\mathbf w_*+\mathbf u)
+=\mathbf w_*^\top\Omega\mathbf w_*+\mathbf u^\top\Omega\mathbf u.
+$$
+
+교차항은 $\Omega\mathbf w_*=\gamma\boldsymbol\mu+\lambda\mathbf1$ 때문에 0이다. $\Omega$가 양의 정부호면 $\mathbf u\ne0$에 대해 마지막 항이 양수다. 그러므로 이 해는 공매도를 허용한 제약집합에서 **유일한 전역 최소해**다.
 
 ## 9. 평균·분산 경계의 방정식을 끝까지 유도하기
 
@@ -135,20 +142,26 @@ $$
 
 ## 11. 두 포트폴리오로 경계 전체를 만드는 이유
 
-목표수익률 $m$에 따른 해는 $\mathbf w(m)=\Omega^{-1}(\gamma\boldsymbol\mu+\lambda\mathbf1)$이다. 승수 $\gamma,\lambda$는 $m$의 일차함수이므로, 서로 다른 목표수익률 $m_a,m_b$의 경계 포트폴리오를 알면 다른 $m$의 경계 포트폴리오는 두 비중의 선형결합으로 표현된다.
+슬라이드 8의 승수를 모으면 $\mathbf w(m)=\mathbf w_G+(m-\mu_G)\mathbf h$로 쓸 수 있다. 여기서 $\mathbf h=\Omega^{-1}(A\boldsymbol\mu-B\mathbf1)/\Delta$이며 $\mathbf1^\top\mathbf h=0$, $\boldsymbol\mu^\top\mathbf h=1$이다. 따라서 목표 평균을 $d$만큼 높이면 비중은 $d\mathbf h$만큼 바뀐다. 서로 다른 목표수익률 $m_a,m_b$의 경계 포트폴리오를 알면 다른 $m$의 비중도 두 비중의 선형결합으로 표현된다.
 
 $$
 \mathbf w(m)=t\mathbf w(m_a)+(1-t)\mathbf w(m_b),
 \qquad t=\frac{m_b-m}{m_b-m_a}.
 $$
 
-예를 들어 $\mathbf w_a=.30\mathbf w_G+.70\mathbf w_D$이고 $\mathbf w_1=.20\mathbf w_G+.80\mathbf w_D$, $\mathbf w_2=.60\mathbf w_G+.40\mathbf w_D$라면 $\mathbf w_a=.75\mathbf w_1+.25\mathbf w_2$다. 서로 다른 두 **경계 포트폴리오**로 경계의 다른 점을 만들 수 있다는 성질이 **two-fund separation**이다. 목표 평균이 두 기준 평균의 바깥에 있으면 계수 하나가 음수가 되어 차입 또는 공매도가 필요할 수 있다.
+$t m_a+(1-t)m_b=m$이므로 이 결합은 합계 비중 1과 목표 평균 $m$을 동시에 만족한다. 더구나 $\mathbf w(m)$ 자체가 $m$의 일차함수이므로 결합한 비중이 바로 목표별 최소분산 해다. 서로 다른 두 **경계 포트폴리오**로 경계의 다른 점을 만들 수 있다는 성질이 **two-fund separation**이다. $m$이 두 기준 평균 밖이면 계수 하나가 음수가 되어 해당 기준 포트폴리오의 공매도가 필요하다.
 
 ## 12. 무위험자산을 넣으면 생기는 접선
 
-기대수익률 $r_f$가 확정된 자산과 위험자산 포트폴리오 $P$를 섞자. 전체 자금 중 $y$를 $P$에 넣으면 $\mu_c=r_f+y(\mu_P-r_f)$이고, $y\ge0$에서 $\sigma_c=y\sigma_P$다. $y$를 제거하면 $\mu_c=r_f+[(\mu_P-r_f)/\sigma_P]\sigma_c$가 되어 무위험점에서 $P$를 지나는 직선이 나온다.
+두 자산 장에서 위험자산 조합 $P$와 무위험자산을 섞으면 $\mu_c=r_f+y(\mu_P-r_f)$, $\sigma_c=y\sigma_P$라는 직선을 얻었다. 여러 자산에서도 내부 조합 $P$를 바꿀 때 이 직선의 기울기 $S_P=(\mu_P-r_f)/\sigma_P$를 비교한다.
 
-어느 $P$를 고를지는 그 직선의 기울기, 곧 샤프비율 $(\mu_P-r_f)/\sigma_P$를 비교해 정한다. 기울기가 가장 큰 직선은 위험자산의 효율적 프런티어에 접한다. 이 접점 $P$가 정해지면 투자자는 위험자산 내부 비중을 그대로 유지하고 $y$만 바꾸어 자신의 위험 수준을 선택한다. 그림의 직선 연장은 **같은 $r_f$로 차입까지 가능**하다는 이상화된 가정에 의존한다.
+위험자산의 경계를 분산 함수 $v(m)=(Am^2-2Bm+C)/\Delta$로 나타내면 $S(m)=(m-r_f)/\sqrt{v(m)}$다. 내부 접점에서 $S'(m)=0$을 정리하면 $2v(m)=(m-r_f)v'(m)$이고, $v'(m)=2(Am-B)/\Delta$를 넣으면
+
+$$
+m_T=\frac{C-Br_f}{B-Ar_f}\qquad(B-Ar_f>0)
+$$
+
+를 얻는다. $m_T-\mu_G=\Delta/[A(B-Ar_f)]>0$이므로 접점은 최소분산점보다 평균이 높은 **효율적 가지**에 있다. 이 식은 접점의 평균 수익률을 주며, 비중 벡터는 다음 슬라이드에서 구한다. 도함수 조건은 위험자산 경계의 접선 기울기가 무위험점에서 그은 직선의 기울기와 같다는 기하학적 조건이다.
 
 ## 13. 접점을 찾는 첫 단계: 초과수익의 위험 최소화
 
@@ -157,13 +170,12 @@ $$
 $$
 L=\tfrac12\mathbf w_c^\top\Omega\mathbf w_c
 +\theta(e_c-\mathbf e^\top\mathbf w_c),
-\quad \Omega\mathbf w_c=\theta\mathbf e,
-\quad \theta=\frac{e_c}{\mathbf e^\top\Omega^{-1}\mathbf e}.
+\qquad \nabla_{\mathbf w_c}L=\Omega\mathbf w_c-\theta\mathbf e=\mathbf0.
 $$
 
-따라서 $\mathbf w_c=[e_c/(\mathbf e^\top\Omega^{-1}\mathbf e)]\Omega^{-1}\mathbf e$다. 목표 초과수익 $e_c$는 전체 크기만 바꾸고 위험자산 **서로 간의 비율**은 $\Omega^{-1}\mathbf e$가 정한다. 이 해가 최소분산인 이유는 양의 정부호 $\Omega$ 아래 목적함수가 볼록하기 때문이다.
+따라서 $\mathbf w_c=\theta\Omega^{-1}\mathbf e$다. 제약식 $\mathbf e^\top\mathbf w_c=e_c$에 대입하면 $\theta=e_c/(\mathbf e^\top\Omega^{-1}\mathbf e)$를 얻는다. 분모는 $\Omega$가 양의 정부호이고 $\mathbf e\ne\mathbf0$일 때 양수다. 목표 초과수익 $e_c$는 전체 크기만 바꾸고 위험자산 **서로 간의 비율**은 $\Omega^{-1}\mathbf e$가 정한다.
 
-해를 다시 이차형식에 넣으면 최소분산은 $\sigma_c^2=e_c^2/(\mathbf e^\top\Omega^{-1}\mathbf e)$다. $e_c>0$이면 $e_c/\sigma_c=\sqrt{\mathbf e^\top\Omega^{-1}\mathbf e}$가 목표 초과수익의 크기와 무관하다. 한 방향의 위험자산 묶음을 확대·축소해도 자본배분선의 기울기가 일정한 이유다.
+해를 다시 이차형식에 넣으면 $\sigma_c^2=\theta^2\mathbf e^\top\Omega^{-1}\mathbf e=e_c^2/(\mathbf e^\top\Omega^{-1}\mathbf e)$다. $e_c>0$이면 $e_c/\sigma_c=\sqrt{\mathbf e^\top\Omega^{-1}\mathbf e}$가 목표 초과수익의 크기와 무관하다. 목적함수가 엄격히 볼록하므로 이 일계조건의 해가 해당 목표의 유일한 최소분산 해다.
 
 ## 14. 둘째 단계: 위험자산 내부 비중을 1로 정규화하기
 
@@ -193,7 +205,7 @@ $$
 
 ## 16. 두 프런티어를 한 그림에서 비교하기
 
-무위험자산이 없으면 최소분산 경계는 $\sigma_p^2(m)=(Am^2-2Bm+C)/\Delta$이며, GMVP는 $(\sigma_G,\mu_G)=(1/\sqrt A,B/A)$다. 무위험자산을 허용하고 접점 $P$가 존재하면 새 효율적 선택선은 $r_f$에서 시작해 $P$를 지나는 직선이다.
+무위험자산이 없을 때 선택 가능한 최상단은 평균·분산 경계의 위쪽 가지다. 양의 초과수익을 주는 접점 $P$가 존재하면, 무위험자산을 허용한 뒤에는 $r_f$에서 $P$를 지나는 직선이 효율적 선택선이 된다.
 
 $$
 \mu_c=r_f+\frac{\mu_P-r_f}{\sigma_P}\,\sigma_c
@@ -201,10 +213,16 @@ $$
 \frac{\mu_c-r_f}{\sigma_c}=\frac{\mu_P-r_f}{\sigma_P}.
 $$
 
-$\sigma_c$는 전체 계좌의 표준편차, $\sigma_P$는 접점 포트폴리오 자체의 표준편차다. 투자자는 위험자산 내부 비중 $\mathbf w_P$를 고정한 채 전체 위험자산 비중 $y$를 조절한다. $y>1$ 구간은 무위험 금리로 차입할 수 있을 때 직선으로 이어지며, 차입금리가 높으면 그 구간의 기울기가 낮아진다.
+이를 부등식으로도 확인할 수 있다. 슬라이드 13에서 $S_T=\sqrt{\mathbf e^\top\Omega^{-1}\mathbf e}$였으므로 임의의 위험자산 조합 $Q$에는 $\mu_Q-r_f\le S_T\sigma_Q$가 성립한다. $Q$에 전체 자금의 $y\ge0$을 배분하면 같은 위험 $\sigma_c=y\sigma_Q$에서
+
+$$
+\mu_c=r_f+y(\mu_Q-r_f)\le r_f+S_T\sigma_c.
+$$
+
+접점 조합에서는 등호가 성립한다. 이 부등식이 접점 직선보다 위에 실현 가능한 점이 없다는 수학적 이유다. $y>1$ 구간은 같은 $r_f$로 차입할 수 있을 때 직선으로 이어진다.
 
 ## 17. 평균·분산 선택에서 CAPM으로 넘어가기
 
 지금까지는 기대수익률 $\boldsymbol\mu$와 공분산 $\Omega$가 주어졌을 때 투자자 한 명의 최적 비중을 구했다. CAPM은 투자자들이 공통 기대를 가지고, 위험자산의 총수요가 실제 공급과 같다는 **시장청산** 조건을 더한다. 이때 접점 포트폴리오를 시장포트폴리오에 연결하면 개별 자산의 **시장과 함께 움직이는 위험**이 기대수익률에 어떻게 반영되는지 설명할 수 있다.
 
-공통의 접점 비중이 시장 비중 $\mathbf w_M$와 같다면 $\Omega\mathbf w_M=k(\boldsymbol\mu-r_f\mathbf1)$인 양의 상수 $k$가 존재한다. 양변을 정리하고 시장 비중으로 가중해 $k$를 제거하면 $\mu_i-r_f=[\operatorname{Cov}(R_i,R_M)/\operatorname{Var}(R_M)](\mu_M-r_f)$다. 이 괄호가 $\beta_i$다. 이는 앞의 개인 최적화에 **공통 기대·무위험 차입과 대출·시장청산**을 추가한 결과이며, 아무 자산의 역사적 회귀계수를 계산하기만 하면 자동으로 성립하는 항등식은 아니다.
+공통의 접점 비중이 시장 비중 $\mathbf w_M$와 같다면 $\Omega\mathbf w_M=k(\boldsymbol\mu-r_f\mathbf1)$인 양의 상수 $k$가 존재한다. 양변을 정리하고 시장 비중으로 가중해 $k$를 제거하면 $\mu_i-r_f=[\operatorname{Cov}(R_i,R_M)/\operatorname{Var}(R_M)](\mu_M-r_f)$다. 이 괄호가 $\beta_i$다. CAPM의 가격식은 개인의 최적화에 **공통 기대·무위험 차입과 대출·시장청산**을 추가한 결과다. 역사적 회귀로 구한 베타는 이 식을 실증적으로 적용할 때 필요한 위험 추정치다.
