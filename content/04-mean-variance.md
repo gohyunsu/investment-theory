@@ -27,6 +27,8 @@ $$
 
 예를 들어 $\mathbf w=(.5,.3,.2)^\top$, $\boldsymbol\mu=(.08,.12,.16)^\top$이면 $\mu_p=.5(.08)+.3(.12)+.2(.16)=.108$이다. $\mathbf w^\top\boldsymbol\mu$는 $(1\times n)(n\times1)$의 곱이어서 결과가 하나의 숫자다. 그 숫자를 전치해도 같으므로 $\boldsymbol\mu^\top\mathbf w=\mathbf w^\top\boldsymbol\mu$다. 비중에 대한 gradient는 $\nabla_{\mathbf w}(\mathbf w^\top\boldsymbol\mu)=\boldsymbol\mu$로, 각 비중을 조금 높였을 때 평균이 해당 자산의 $\mu_i$만큼 움직인다는 뜻이다. 전치 기호 $\top$는 미분 표시가 아니다.
 
+다만 $\mathbf1^\top\mathbf w=1$을 유지하려면 한 비중을 늘릴 때 다른 비중을 줄여야 한다. $\mathbf e_i$를 $i$번째 성분만 1인 표준기저벡터라 하자. 자산 $j$에서 $i$로 $\varepsilon$만큼 옮기는 변화 $\Delta\mathbf w=\varepsilon(\mathbf e_i-\mathbf e_j)$는 합계가 0이고, 평균 변화는 정확히 $\Delta\mu_p=\varepsilon(\mu_i-\mu_j)$다. 개별 편미분 $\mu_i$와 **예산을 지키는 교체 거래의 효과**를 구분한다.
+
 ## 5. 공분산행렬과 이차형식의 뜻
 
 공분산행렬 $\Omega$의 대각 원소는 각 자산의 분산 $\sigma_i^2$, 비대각 원소는 $\sigma_{ij}=\operatorname{Cov}(R_i,R_j)$이다. 공분산은 순서를 바꾸어도 같으므로 $\Omega$는 대칭행렬이다. 세 자산의 분산식은 다음과 같이 전개된다.
@@ -38,6 +40,8 @@ $$
 $$
 
 공분산 항의 계수 2는 $(w_1X_1+w_2X_2+w_3X_3)^2$를 전개할 때 $X_iX_j$와 $X_jX_i$가 함께 나오기 때문이다. $\Omega\mathbf w$의 $i$번째 성분은 $\sum_jw_j\operatorname{Cov}(R_i,R_j)=\operatorname{Cov}(R_i,R_p)$다. 따라서 분산의 gradient $2\Omega\mathbf w$는 각 자산의 비중을 조금 늘릴 때의 **한계위험**을 나타낸다. 라그랑지안에서 $\tfrac12\mathbf w^\top\Omega\mathbf w$를 쓰면 미분 결과가 $\Omega\mathbf w$로 간결해진다. 임의의 비중에 대해 분산이 음수가 될 수 없으므로 공분산행렬은 양의 준정부호여야 한다.
+
+행렬식의 출발점은 $\mathbf R=(R_1,\ldots,R_n)^\top$와 $\boldsymbol\mu=E[\mathbf R]$에 대한 $\Omega=E[(\mathbf R-\boldsymbol\mu)(\mathbf R-\boldsymbol\mu)^\top]$이다. 이를 대입하면 임의의 $\mathbf a$에 대해 $\mathbf a^\top\Omega\mathbf a=E[(\mathbf a^\top(\mathbf R-\boldsymbol\mu))^2]\ge0$다. 모든 $\mathbf a\ne0$에서 부등식이 엄격할 때 양의 **정부호**이며 역행렬이 존재한다. 이후의 닫힌 형태 해는 이 더 강한 조건을 사용한다.
 
 ## 6. 세 위험자산의 평균과 분산을 직접 계산하기
 
@@ -87,6 +91,8 @@ $$
 
 를 얻는다. $A,B,C$는 긴 행렬 곱을 세 숫자로 요약한 표기다. 공분산행렬이 양의 정부호이고 자산들의 기대수익률이 모두 같지 않으면 $\Delta>0$이다. 이 조건은 목표 평균과 비중 합계가 독립적인 제약임을 보장한다.
 
+이로써 $\mathbf w(m)=\Omega^{-1}(\gamma\boldsymbol\mu+\lambda\mathbf1)$의 모든 계수가 정해졌다. 목적함수의 Hessian은 $\Omega$이고 양의 정부호이므로, 일계조건을 만족하는 이 비중은 제약을 지키는 다른 모든 비중보다 분산이 낮은 **유일한 전역 최소해**다. 음의 비중을 허용한다는 조건도 여기에 포함된다.
+
 ## 9. 평균·분산 경계의 방정식을 끝까지 유도하기
 
 앞에서 구한 $\mathbf w$에 $\Omega$를 곱하면 $\Omega\mathbf w=\gamma\boldsymbol\mu+\lambda\mathbf1$이다. 왼쪽에 $\mathbf w^\top$를 곱하면 분산이 $\sigma_p^2=\gamma\mathbf w^\top\boldsymbol\mu+\lambda\mathbf w^\top\mathbf1=\gamma m+\lambda$가 된다. 승수 값을 대입해 정리하면
@@ -96,7 +102,9 @@ $$
 =\frac1A+\frac{A}{\Delta}\left(m-\frac BA\right)^2.
 $$
 
-두 번째 식은 완전제곱으로 얻는다. $\mu_G=B/A$, $\sigma_G^2=1/A$라 쓰면 분산을 가로축에 둔 그림에서는 $\sigma_p^2=\sigma_G^2+(A/\Delta)(m-\mu_G)^2$가 **옆으로 열린 포물선**이다. 표준편차를 가로축에 두면 같은 식을
+전개를 거꾸로 확인하면 $Am^2-2Bm+C=A(m-B/A)^2+(AC-B^2)/A$다. 분모 $\Delta=AC-B^2$를 적용할 때 상수항이 $1/A$가 되는 과정을 생략하지 않는 이유다.
+
+따라서 $\mu_G=B/A$, $\sigma_G^2=1/A$라 쓰면 분산을 가로축에 둔 그림에서는 $\sigma_p^2=\sigma_G^2+(A/\Delta)(m-\mu_G)^2$가 **옆으로 열린 포물선**이다. 표준편차를 가로축에 두면 같은 식을
 
 $$
 \frac{\sigma_p^2}{\sigma_G^2}
@@ -115,6 +123,15 @@ $$
 $$
 
 GMVP 비중은 주어진 공분산행렬만으로 결정된다. 기대수익률 벡터 $\boldsymbol\mu$는 이 포트폴리오의 평균 $B/A$를 평가하고 효율적 가지의 다른 점을 선택할 때 필요하다. 공매도 금지 제약이 있다면 음의 비중이 나온 경우 제약을 포함해 다시 최적화한다.
+
+목표 평균을 거치지 않고도 같은 해를 증명할 수 있다. $\tfrac12\mathbf w^\top\Omega\mathbf w+\lambda(1-\mathbf1^\top\mathbf w)$를 미분하면 $\Omega\mathbf w=\lambda\mathbf1$이고, 합계 조건으로 $\lambda=1/A$다. 총비중만 1인 임의의 다른 비중을 $\mathbf w_G+\mathbf u$로 쓰면 $\mathbf1^\top\mathbf u=0$이고
+
+$$
+(\mathbf w_G+\mathbf u)^\top\Omega(\mathbf w_G+\mathbf u)
+=\frac1A+\mathbf u^\top\Omega\mathbf u\ge\frac1A.
+$$
+
+교차항은 $\Omega\mathbf w_G=\mathbf1/A$와 $\mathbf1^\top\mathbf u=0$ 때문에 사라진다. 기대수익률을 쓰지 않고도 GMVP가 전역 최소라는 점이 드러난다.
 
 ## 11. 두 포트폴리오로 경계 전체를 만드는 이유
 
@@ -146,6 +163,8 @@ $$
 
 따라서 $\mathbf w_c=[e_c/(\mathbf e^\top\Omega^{-1}\mathbf e)]\Omega^{-1}\mathbf e$다. 목표 초과수익 $e_c$는 전체 크기만 바꾸고 위험자산 **서로 간의 비율**은 $\Omega^{-1}\mathbf e$가 정한다. 이 해가 최소분산인 이유는 양의 정부호 $\Omega$ 아래 목적함수가 볼록하기 때문이다.
 
+해를 다시 이차형식에 넣으면 최소분산은 $\sigma_c^2=e_c^2/(\mathbf e^\top\Omega^{-1}\mathbf e)$다. $e_c>0$이면 $e_c/\sigma_c=\sqrt{\mathbf e^\top\Omega^{-1}\mathbf e}$가 목표 초과수익의 크기와 무관하다. 한 방향의 위험자산 묶음을 확대·축소해도 자본배분선의 기울기가 일정한 이유다.
+
 ## 14. 둘째 단계: 위험자산 내부 비중을 1로 정규화하기
 
 접점 포트폴리오 $P$는 위험자산만으로 이루어진 **내부 조합**이므로 $\mathbf1^\top\mathbf w_P=1$이어야 한다. 앞의 방향 벡터 $\Omega^{-1}\mathbf e$를 합계가 1이 되도록 나누면
@@ -157,6 +176,8 @@ $$
 $$
 
 $B-Ar_f>0$이면 이 정규화의 초과 기대수익이 양수이며 샤프비율은 $\sqrt{\mathbf e^\top\Omega^{-1}\mathbf e}$다. $B-Ar_f=0$이면 방향벡터의 비중 합이 0이어서 유한한 합계 1 포트폴리오로 정규화할 수 없다. 전체 계좌에서는 위험자산에 $y\mathbf w_P$, 무위험자산에 $1-y$를 배분한다.
+
+$B-Ar_f<0$이면 분모로 나누는 순간 $\Omega^{-1}\mathbf e$의 방향이 뒤집힌다. 그 결과 위 식은 합계 1인 위험자산 조합이지만 **양의 초과수익을 주는 최대 샤프비율 접점**은 아니다. 따라서 접점 공식은 역행렬과 분모의 존재만 확인해서 끝내지 않고, $\mathbf e\ne0$, 분모의 부호, 허용된 공매도·차입 범위를 함께 확인해야 한다.
 
 ## 15. 두 위험자산 공식과 같은 답인지 검산하기
 
@@ -185,3 +206,5 @@ $\sigma_c$는 전체 계좌의 표준편차, $\sigma_P$는 접점 포트폴리�
 ## 17. 평균·분산 선택에서 CAPM으로 넘어가기
 
 지금까지는 기대수익률 $\boldsymbol\mu$와 공분산 $\Omega$가 주어졌을 때 투자자 한 명의 최적 비중을 구했다. CAPM은 투자자들이 공통 기대를 가지고, 위험자산의 총수요가 실제 공급과 같다는 **시장청산** 조건을 더한다. 이때 접점 포트폴리오를 시장포트폴리오에 연결하면 개별 자산의 **시장과 함께 움직이는 위험**이 기대수익률에 어떻게 반영되는지 설명할 수 있다.
+
+공통의 접점 비중이 시장 비중 $\mathbf w_M$와 같다면 $\Omega\mathbf w_M=k(\boldsymbol\mu-r_f\mathbf1)$인 양의 상수 $k$가 존재한다. 양변을 정리하고 시장 비중으로 가중해 $k$를 제거하면 $\mu_i-r_f=[\operatorname{Cov}(R_i,R_M)/\operatorname{Var}(R_M)](\mu_M-r_f)$다. 이 괄호가 $\beta_i$다. 이는 앞의 개인 최적화에 **공통 기대·무위험 차입과 대출·시장청산**을 추가한 결과이며, 아무 자산의 역사적 회귀계수를 계산하기만 하면 자동으로 성립하는 항등식은 아니다.
