@@ -23,8 +23,9 @@ for slide in slides:
     with Image.open(image) as picture:
         assert picture.width >= 1500 and picture.height >= 900, slide["id"]
     assert slide["title"] and slide["html"] and "\ufffd" not in slide["html"]
-    assert slide["deep"]["title"] and slide["deep"]["html"] and "\ufffd" not in slide["deep"]["html"]
-    assert slide["case"]["title"] and slide["case"]["html"] and "\ufffd" not in slide["case"]["html"]
+    for key in ("deep", "case", "supplement"):
+        if key in slide:
+            assert slide[key]["title"] and slide[key]["html"] and "\ufffd" not in slide[key]["html"]
 
 for chapter_number, (chapter_slug, expected) in enumerate(expected_counts.items(), 1):
     page = (root / "lecture" / f"{chapter_number:02}.html").read_text(encoding="utf-8")
@@ -35,8 +36,9 @@ for chapter_number, (chapter_slug, expected) in enumerate(expected_counts.items(
         assert f'id="s{slide["page"]:02}"' in page
         assert f'../{slide["image"]}' in page
     assert page.count('width="1600" height="1200"') == expected
-    assert page.count('class="case-note"') == expected
-    assert page.count('class="deep-note"') == expected
+    assert page.count('class="case-note"') == sum("case" in slide for slide in chapter_slides)
+    assert page.count('class="deep-note"') == sum("deep" in slide for slide in chapter_slides)
+    assert page.count('<details>') == sum("supplement" in slide for slide in chapter_slides)
 assert (root / "index.html").read_text(encoding="utf-8").count('<a class="overview-card ') == len(expected_counts)
 
 assert not list(root.rglob("*_original.txt"))
@@ -58,4 +60,4 @@ assert math.isclose(1.5*(-.20)-.5*.07, -.335, abs_tol=1e-12)
 assert math.isclose(2*.6*.4*.15*.20, .0144, abs_tol=1e-12)
 assert math.isclose(.5**2*.1**2+.3**2*.15**2+.2**2*.2**2+2*.5*.3*.003+2*.5*.2*.002+2*.3*.2*.009, .008505, abs_tol=1e-12)
 assert math.isclose((.04*.05-.006*.09)/((.04-.006)*.05+(.0225-.006)*.09), .45839874411302983, abs_tol=1e-12)
-print(f"{expected_total} slide mappings and questions, image dimensions, publication exclusions and calculations passed")
+print(f"{expected_total} slide mappings, selected expansions, image dimensions, publication exclusions and calculations passed")

@@ -94,10 +94,10 @@ def lecture(chapter: dict, slides: list[dict], chapter_index: int) -> str:
     for s in own:
         slide_number = f'{s["page"]:02}'
         src = '../' + s['image']
-        deep = s['deep']
-        deep_html = f'<details class="deep-note"><summary>{e(deep["title"])}</summary>{deep["html"]}</details>'
-        case = s['case']
-        case_html = f'<details class="case-note"><summary>{e(case["title"])}</summary>{case["html"]}</details>'
+        deep = s.get('deep')
+        deep_html = f'<details class="deep-note"><summary>{e(deep["title"])}</summary>{deep["html"]}</details>' if deep else ''
+        case = s.get('case')
+        case_html = f'<details class="case-note"><summary>{e(case["title"])}</summary>{case["html"]}</details>' if case else ''
         supplement = s.get('supplement')
         supplement_html = f'<details><summary>{e(supplement["title"])}</summary>{supplement["html"]}</details>' if supplement else ''
         lab = '<div id="portfolio-lab"></div>' if s['id'] == '03-two-assets/18' else ''
@@ -111,7 +111,15 @@ def lecture(chapter: dict, slides: list[dict], chapter_index: int) -> str:
 
 
 def build_site(root: Path, slides: list[dict]) -> None:
-    data = [{k: (v.replace(r'\boldsymbol', r'\mathbf') if k == 'html' else v) for k, v in slide.items() if k not in ('raw', 'deep', 'case', 'supplement')} | {'deep': {'title': slide['deep']['title'], 'html': slide['deep']['html'].replace(r'\boldsymbol', r'\mathbf')}, 'case': {'title': slide['case']['title'], 'html': slide['case']['html'].replace(r'\boldsymbol', r'\mathbf')}} | ({'supplement': {'title': slide['supplement']['title'], 'html': slide['supplement']['html'].replace(r'\boldsymbol', r'\mathbf')}} if slide.get('supplement') else {}) for slide in slides]
+    data = []
+    for slide in slides:
+        item = {k: (v.replace(r'\boldsymbol', r'\mathbf') if k == 'html' else v)
+                for k, v in slide.items() if k not in ('raw', 'deep', 'case', 'supplement')}
+        for key in ('deep', 'case', 'supplement'):
+            note = slide.get(key)
+            if note:
+                item[key] = {'title': note['title'], 'html': note['html'].replace(r'\boldsymbol', r'\mathbf')}
+        data.append(item)
     (root / 'data.json').write_text(json.dumps(data, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
     (root / 'index.html').write_text(home(data), encoding='utf-8')
     lecture_dir = root / 'lecture'

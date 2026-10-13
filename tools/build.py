@@ -177,15 +177,11 @@ def build_tex(slides: list[dict]) -> None:
             parts.append("\\section{" + tex_escape(slide["chapterName"]) + "}\n")
         parts.append("\\subsection{슬라이드 " + str(slide["page"]) + ": " + tex_escape(slide["title"]) + "}\n")
         parts.append(tex_body(slide["raw"]) + "\n")
-        deep = slide["deep"]
-        parts.append("\\paragraph{" + tex_inline(deep["title"]) + "}\n")
-        parts.append(tex_body(deep["raw"]) + "\n")
-        case = slide["case"]
-        parts.append("\\paragraph{" + tex_inline(case["title"]) + "}\n")
-        parts.append(tex_body(case["raw"]) + "\n")
-        if slide.get("supplement"):
-            parts.append("\\paragraph{" + tex_escape(slide["supplement"]["title"]) + "}\n")
-            parts.append(tex_body(slide["supplement"]["raw"]) + "\n")
+        for key in ("deep", "case", "supplement"):
+            note = slide.get(key)
+            if note:
+                parts.append("\\paragraph{" + tex_inline(note["title"]) + "}\n")
+                parts.append(tex_body(note["raw"]) + "\n")
     parts.append("\\end{document}\n")
     (ROOT / "guide.tex").write_text("\n".join(parts), encoding="utf-8")
 
@@ -197,15 +193,17 @@ def main() -> None:
         slides.extend(slides_from_markdown(ROOT / "content" / (slug + ".md"), slug, name))
     deep_dives = load_deep_dives()
     slide_ids = {slide["id"] for slide in slides}
-    if set(deep_dives) != slide_ids:
-        raise ValueError(f"Deep dives must cover every slide: missing={slide_ids-set(deep_dives)}, extra={set(deep_dives)-slide_ids}")
+    if set(deep_dives) - slide_ids:
+        raise ValueError(f"A deep dive points to a missing slide: {set(deep_dives)-slide_ids}")
     for slide in slides:
-        slide["deep"] = deep_dives[slide["id"]]
+        if slide["id"] in deep_dives:
+            slide["deep"] = deep_dives[slide["id"]]
     cases = load_cases()
-    if set(cases) != slide_ids:
-        raise ValueError(f"Questions and cases must cover every slide: missing={slide_ids-set(cases)}, extra={set(cases)-slide_ids}")
+    if set(cases) - slide_ids:
+        raise ValueError(f"A case points to a missing slide: {set(cases)-slide_ids}")
     for slide in slides:
-        slide["case"] = cases[slide["id"]]
+        if slide["id"] in cases:
+            slide["case"] = cases[slide["id"]]
     supplements = load_supplements()
     if set(supplements) - {slide["id"] for slide in slides}:
         raise ValueError("A supplement points to a missing slide")
