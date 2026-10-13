@@ -76,6 +76,9 @@ details p{padding:13px 2px 15px;font-size:14px;color:#3e5361;margin:0!important}
 .case-note{background:#f4f7fb;border-color:#d9e3ed}
 .case-note summary{color:#244c73}
 .case-note[open] summary{border-bottom-color:#d9e3ed}
+.deep-note{background:#f7f8f5;border-color:#e0e5d9}
+.deep-note summary{color:#4c6037}
+.deep-note[open] summary{border-bottom-color:#e0e5d9}
 .concept-figure{margin:26px 0 7px;padding:20px;border:1px solid var(--line);border-radius:10px;background:#fff}
 .concept-figure img{display:block;width:100%;height:auto}
 .concept-figure figcaption{font-size:11px;color:#8190a0;margin-top:8px;text-align:right}

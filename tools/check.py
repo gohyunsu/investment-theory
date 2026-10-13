@@ -23,6 +23,7 @@ for slide in slides:
     with Image.open(image) as picture:
         assert picture.width >= 1500 and picture.height >= 900, slide["id"]
     assert slide["title"] and slide["html"] and "\ufffd" not in slide["html"]
+    assert slide["deep"]["title"] and slide["deep"]["html"] and "\ufffd" not in slide["deep"]["html"]
     assert slide["case"]["title"] and slide["case"]["html"] and "\ufffd" not in slide["case"]["html"]
 
 for chapter_number, (chapter_slug, expected) in enumerate(expected_counts.items(), 1):
@@ -35,6 +36,7 @@ for chapter_number, (chapter_slug, expected) in enumerate(expected_counts.items(
         assert f'../{slide["image"]}' in page
     assert page.count('width="1600" height="1200"') == expected
     assert page.count('class="case-note"') == expected
+    assert page.count('class="deep-note"') == expected
 assert (root / "index.html").read_text(encoding="utf-8").count('<a class="overview-card ') == len(expected_counts)
 
 assert not list(root.rglob("*_original.txt"))

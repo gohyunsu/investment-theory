@@ -72,7 +72,7 @@ def load_supplements() -> dict[str, dict]:
     return result
 
 
-def load_deep_dives() -> dict[str, str]:
+def load_deep_dives() -> dict[str, dict]:
     source = (ROOT / "content/deep-dives.md").read_text(encoding="utf-8")
     matches = list(DEEP_DIVE_RE.finditer(source))
     result = {}
@@ -83,7 +83,7 @@ def load_deep_dives() -> dict[str, str]:
         body = source[match.end():matches[i + 1].start() if i + 1 < len(matches) else len(source)].strip()
         if not body:
             raise ValueError(f"Empty deep dive: {key}")
-        result[key] = body
+        result[key] = {"title": match.group(2), "raw": body, "html": render_markdown(body)}
     return result
 
 
@@ -177,6 +177,9 @@ def build_tex(slides: list[dict]) -> None:
             parts.append("\\section{" + tex_escape(slide["chapterName"]) + "}\n")
         parts.append("\\subsection{슬라이드 " + str(slide["page"]) + ": " + tex_escape(slide["title"]) + "}\n")
         parts.append(tex_body(slide["raw"]) + "\n")
+        deep = slide["deep"]
+        parts.append("\\paragraph{" + tex_inline(deep["title"]) + "}\n")
+        parts.append(tex_body(deep["raw"]) + "\n")
         case = slide["case"]
         parts.append("\\paragraph{" + tex_inline(case["title"]) + "}\n")
         parts.append(tex_body(case["raw"]) + "\n")
@@ -197,8 +200,7 @@ def main() -> None:
     if set(deep_dives) != slide_ids:
         raise ValueError(f"Deep dives must cover every slide: missing={slide_ids-set(deep_dives)}, extra={set(deep_dives)-slide_ids}")
     for slide in slides:
-        slide["raw"] += "\n\n" + deep_dives[slide["id"]]
-        slide["html"] = render_markdown(slide["raw"])
+        slide["deep"] = deep_dives[slide["id"]]
     cases = load_cases()
     if set(cases) != slide_ids:
         raise ValueError(f"Questions and cases must cover every slide: missing={slide_ids-set(cases)}, extra={set(cases)-slide_ids}")

@@ -1,10 +1,10 @@
 const prefix = document.body.dataset.prefix || '';
-const chapterNumbers = {'01-intro':'01','02-risk-return':'02','03-two-assets':'03'};
+const chapterNumbers = {'01-intro':'01','02-risk-return':'02','03-two-assets':'03','04-mean-variance':'04'};
 const escapeHtml = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 // Preserve bookmarks from the earlier slide-at-a-time site.
 if (!prefix && location.hash) {
-  const old = /^#(01-intro|02-risk-return|03-two-assets)\/(\d+)$/.exec(decodeURIComponent(location.hash));
+  const old = /^#(01-intro|02-risk-return|03-two-assets|04-mean-variance)\/(\d+)$/.exec(decodeURIComponent(location.hash));
   if (old) location.replace(`lecture/${chapterNumbers[old[1]]}.html#s${old[2].padStart(2, '0')}`);
 }
 
@@ -20,7 +20,7 @@ function getSlides() {
   }).then(data => {
     const parser = document.createElement('div');
     slideData = data.map(slide => {
-      parser.innerHTML = slide.html + (slide.case?.html || '') + (slide.supplement?.html || '');
+      parser.innerHTML = slide.html + (slide.deep?.html || '') + (slide.case?.html || '') + (slide.supplement?.html || '');
       return {...slide, text: parser.textContent.replace(/\s+/g, ' ')};
     });
     return slideData;

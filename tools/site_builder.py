@@ -94,12 +94,14 @@ def lecture(chapter: dict, slides: list[dict], chapter_index: int) -> str:
     for s in own:
         slide_number = f'{s["page"]:02}'
         src = '../' + s['image']
+        deep = s['deep']
+        deep_html = f'<details class="deep-note"><summary>{e(deep["title"])}</summary>{deep["html"]}</details>'
         case = s['case']
         case_html = f'<details class="case-note"><summary>{e(case["title"])}</summary>{case["html"]}</details>'
         supplement = s.get('supplement')
         supplement_html = f'<details><summary>{e(supplement["title"])}</summary>{supplement["html"]}</details>' if supplement else ''
         lab = '<div id="portfolio-lab"></div>' if s['id'] == '03-two-assets/18' else ''
-        sections.append(f'''<section class="slide" id="s{slide_number}" data-slide="{slide_number}"><div class="slide-heading"><span class="slide-index">{number} / {slide_number}</span><h2>{e(s['title'])}</h2></div><div class="slide-grid"><figure class="slide-figure"><button type="button" class="slide-image-button" data-zoom-src="{e(src)}" data-zoom-label="{e(chapter['title'])} · 슬라이드 {slide_number}" aria-label="슬라이드 {slide_number} 이미지 확대"><img src="{e(src)}" alt="{e(chapter['title'])} 슬라이드 {slide_number}: {e(s['title'])}" width="1600" height="1200" loading="lazy" decoding="async"><span class="zoom-hint">확대해서 보기 ↗</span></button><figcaption>슬라이드 {slide_number}</figcaption></figure><div class="explanation">{s['html']}{case_html}{supplement_html}{lab}</div></div></section>''')
+        sections.append(f'''<section class="slide" id="s{slide_number}" data-slide="{slide_number}"><div class="slide-heading"><span class="slide-index">{number} / {slide_number}</span><h2>{e(s['title'])}</h2></div><div class="slide-grid"><figure class="slide-figure"><button type="button" class="slide-image-button" data-zoom-src="{e(src)}" data-zoom-label="{e(chapter['title'])} · 슬라이드 {slide_number}" aria-label="슬라이드 {slide_number} 이미지 확대"><img src="{e(src)}" alt="{e(chapter['title'])} 슬라이드 {slide_number}: {e(s['title'])}" width="1600" height="1200" loading="lazy" decoding="async"><span class="zoom-hint">확대해서 보기 ↗</span></button><figcaption>슬라이드 {slide_number}</figcaption></figure><div class="explanation">{s['html']}{deep_html}{case_html}{supplement_html}{lab}</div></div></section>''')
     prev = CHAPTERS[chapter_index - 1] if chapter_index else None
     next_ = CHAPTERS[chapter_index + 1] if chapter_index + 1 < len(CHAPTERS) else None
     pager = f'<a href="{prev["number"]}.html"><small>이전 장</small><strong>← {e(prev["title"])}</strong></a>' if prev else '<span></span>'
@@ -109,7 +111,7 @@ def lecture(chapter: dict, slides: list[dict], chapter_index: int) -> str:
 
 
 def build_site(root: Path, slides: list[dict]) -> None:
-    data = [{k: (v.replace(r'\boldsymbol', r'\mathbf') if k == 'html' else v) for k, v in slide.items() if k not in ('raw', 'case', 'supplement')} | {'case': {'title': slide['case']['title'], 'html': slide['case']['html'].replace(r'\boldsymbol', r'\mathbf')}} | ({'supplement': {'title': slide['supplement']['title'], 'html': slide['supplement']['html'].replace(r'\boldsymbol', r'\mathbf')}} if slide.get('supplement') else {}) for slide in slides]
+    data = [{k: (v.replace(r'\boldsymbol', r'\mathbf') if k == 'html' else v) for k, v in slide.items() if k not in ('raw', 'deep', 'case', 'supplement')} | {'deep': {'title': slide['deep']['title'], 'html': slide['deep']['html'].replace(r'\boldsymbol', r'\mathbf')}, 'case': {'title': slide['case']['title'], 'html': slide['case']['html'].replace(r'\boldsymbol', r'\mathbf')}} | ({'supplement': {'title': slide['supplement']['title'], 'html': slide['supplement']['html'].replace(r'\boldsymbol', r'\mathbf')}} if slide.get('supplement') else {}) for slide in slides]
     (root / 'data.json').write_text(json.dumps(data, ensure_ascii=False, separators=(',', ':')), encoding='utf-8')
     (root / 'index.html').write_text(home(data), encoding='utf-8')
     lecture_dir = root / 'lecture'
